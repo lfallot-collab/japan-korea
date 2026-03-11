@@ -1,0 +1,1182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Japan & Seoul — 2025 Trip Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink: #1a1410;
+  --paper: #f7f3ed;
+  --cream: #ede8df;
+  --red: #c0392b;
+  --gold: #b8860b;
+  --muted: #7a6e63;
+  --light-muted: #c5bdb4;
+  --card-bg: #ffffff;
+  --border: #ddd5c8;
+  --osaka: #c0392b;
+  --kyoto: #7b6d8d;
+  --tokyo: #2e4057;
+  --seoul: #2d6a4f;
+  --transit: #8b5e3c;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'DM Sans', sans-serif; background: var(--paper); color: var(--ink); min-height: 100vh; }
+
+/* ── HEADER ── */
+header { background: var(--ink); color: var(--paper); padding: 2.5rem 2rem 2rem; position: relative; overflow: hidden; }
+header::before { content: '旅'; font-family: 'Shippori Mincho', serif; font-size: 18rem; position: absolute; right: -2rem; top: -4rem; opacity: 0.04; line-height: 1; pointer-events: none; }
+.header-inner { max-width: 1100px; margin: 0 auto; position: relative; z-index: 1; }
+.header-label { font-size: 0.7rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--light-muted); margin-bottom: 0.5rem; }
+header h1 { font-family: 'Shippori Mincho', serif; font-size: clamp(1.8rem, 4vw, 3rem); font-weight: 700; line-height: 1.1; margin-bottom: 0.4rem; }
+header h1 span { color: var(--red); }
+.header-dates { color: var(--light-muted); font-size: 0.85rem; font-weight: 300; margin-top: 0.5rem; }
+
+/* ── TAB NAV ── */
+.tab-nav { background: #111; border-bottom: 1px solid #333; position: sticky; top: 0; z-index: 100; }
+.tab-nav-inner { max-width: 1100px; margin: 0 auto; display: flex; gap: 0; overflow-x: auto; }
+.tab-btn { padding: 0.85rem 1.25rem; font-size: 0.78rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: #777; background: none; border: none; cursor: pointer; white-space: nowrap; border-bottom: 3px solid transparent; transition: all 0.2s; font-family: 'DM Sans', sans-serif; }
+.tab-btn:hover { color: #ccc; }
+.tab-btn.active { color: #fff; border-bottom-color: var(--red); }
+.tab-btn.osaka.active  { border-bottom-color: var(--osaka); }
+.tab-btn.kyoto.active  { border-bottom-color: var(--kyoto); }
+.tab-btn.tokyo.active  { border-bottom-color: var(--tokyo); }
+.tab-btn.seoul.active  { border-bottom-color: var(--seoul); }
+.tab-btn.budget.active { border-bottom-color: var(--gold); }
+
+/* ── MAIN ── */
+main { max-width: 1100px; margin: 0 auto; padding: 2rem 1.5rem; }
+.tab-pane { display: none; }
+.tab-pane.active { display: block; }
+
+/* ── TIMELINE ── */
+.timeline-strip { background: var(--card-bg); border: 1px solid var(--border); border-radius: 14px; padding: 1.25rem 1.5rem; margin-bottom: 2rem; overflow-x: auto; }
+.timeline-strip h3 { font-family: 'Shippori Mincho', serif; font-size: 0.8rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin-bottom: 1rem; }
+.timeline { display: flex; align-items: center; min-width: 640px; }
+.tl-stop { display: flex; flex-direction: column; align-items: center; gap: 0.3rem; flex: 1; position: relative; }
+.tl-stop:not(:last-child)::after { content: ''; position: absolute; top: 10px; left: 50%; width: 100%; height: 2px; z-index: 0; }
+.tl-stop.transit::after { background: repeating-linear-gradient(90deg, var(--transit) 0 6px, transparent 6px 12px); }
+.tl-stop.osaka::after  { background: var(--osaka); }
+.tl-stop.kyoto::after  { background: var(--kyoto); }
+.tl-stop.tokyo::after  { background: var(--tokyo); }
+.tl-stop.seoul::after  { background: var(--seoul); }
+.tl-dot { width: 20px; height: 20px; border-radius: 50%; border: 3px solid var(--card-bg); z-index: 1; box-shadow: 0 0 0 2px currentColor; }
+.tl-stop.transit .tl-dot { background: var(--transit); color: var(--transit); }
+.tl-stop.osaka .tl-dot   { background: var(--osaka);   color: var(--osaka); }
+.tl-stop.kyoto .tl-dot   { background: var(--kyoto);   color: var(--kyoto); }
+.tl-stop.tokyo .tl-dot   { background: var(--tokyo);   color: var(--tokyo); }
+.tl-stop.seoul .tl-dot   { background: var(--seoul);   color: var(--seoul); }
+.tl-label { font-size: 0.65rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; text-align: center; color: var(--muted); }
+.tl-dates { font-size: 0.6rem; color: var(--light-muted); text-align: center; }
+
+/* ── SECTION HEADINGS ── */
+.section-header { display: flex; align-items: baseline; gap: 0.75rem; margin: 2rem 0 1rem; }
+.section-header h2 { font-family: 'Shippori Mincho', serif; font-size: 1.4rem; font-weight: 700; }
+.city-tag { font-size: 0.65rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; padding: 0.2rem 0.6rem; border-radius: 999px; color: #fff; }
+.sugg-divider { font-size: 0.7rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin: 1.5rem 0 0.75rem; display: flex; align-items: center; gap: 0.75rem; }
+.sugg-divider::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+/* ── GRIDS ── */
+.cards-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1rem; margin-bottom: 1rem; }
+.cards-grid.full { grid-template-columns: 1fr; }
+.cards-grid.two { grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); }
+
+/* ── PHOTO CARD (sights/hotels) ── */
+.photo-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; display: flex; flex-direction: column; }
+.photo-card .card-img { width: 100%; height: 160px; object-fit: cover; background: var(--cream); display: block; }
+.photo-card .card-img-placeholder { width: 100%; height: 160px; background: linear-gradient(135deg, var(--cream), var(--border)); display: flex; align-items: center; justify-content: center; font-size: 2.5rem; }
+.photo-card .card-body { padding: 1rem 1.1rem 1.1rem; flex: 1; display: flex; flex-direction: column; }
+.card-type { font-size: 0.62rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.35rem; }
+.card-name { font-family: 'Shippori Mincho', serif; font-size: 1rem; font-weight: 700; margin-bottom: 0.3rem; line-height: 1.3; }
+.card-rating { display: flex; align-items: center; gap: 0.35rem; margin-bottom: 0.55rem; }
+.stars { color: #f0a500; font-size: 0.82rem; }
+.rating-num { font-size: 0.78rem; font-weight: 600; }
+.rating-count { font-size: 0.68rem; color: var(--muted); }
+.card-desc { font-size: 0.77rem; color: var(--muted); line-height: 1.55; flex: 1; }
+.card-hours { font-size: 0.68rem; color: var(--muted); margin-top: 0.6rem; display: flex; gap: 0.3rem; align-items: flex-start; }
+.card-hours::before { content: '🕐'; font-size: 0.7rem; flex-shrink: 0; }
+.card-meta { margin-top: 0.6rem; display: flex; gap: 0.4rem; flex-wrap: wrap; }
+.meta-tag { font-size: 0.63rem; padding: 0.2rem 0.55rem; background: var(--cream); border-radius: 6px; color: var(--muted); font-weight: 500; }
+
+/* ── HOTEL CARD ── */
+.hotel-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; }
+.hotel-color-bar { height: 4px; }
+.hotel-img { width: 100%; height: 180px; object-fit: cover; background: var(--cream); }
+.hotel-body { padding: 1.1rem 1.25rem; }
+.hotel-name { font-family: 'Shippori Mincho', serif; font-size: 1.05rem; font-weight: 700; margin-bottom: 0.25rem; line-height: 1.3; }
+.hotel-dates { font-size: 0.72rem; color: var(--muted); margin-bottom: 0.7rem; }
+.hotel-review { font-size: 0.77rem; color: var(--muted); line-height: 1.5; border-left: 3px solid var(--border); padding-left: 0.75rem; font-style: italic; }
+
+/* ── LIST CARD (husband's list items) ── */
+.list-section { background: var(--card-bg); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; margin-bottom: 1rem; }
+.list-section-header { padding: 0.9rem 1.25rem; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #fff; display: flex; justify-content: space-between; align-items: center; cursor: pointer; user-select: none; }
+.list-section-header .toggle { font-size: 0.9rem; transition: transform 0.2s; }
+.list-section-header.open .toggle { transform: rotate(180deg); }
+.list-items { padding: 0.5rem 0; display: none; }
+.list-items.open { display: block; }
+.list-item { padding: 0.55rem 1.25rem; font-size: 0.82rem; display: flex; align-items: flex-start; gap: 0.6rem; border-bottom: 1px solid #f5f0ea; }
+.list-item:last-child { border-bottom: none; }
+.list-item-dot { width: 6px; height: 6px; border-radius: 50%; margin-top: 6px; flex-shrink: 0; }
+.list-item-content { flex: 1; }
+.list-item-name { font-weight: 500; color: var(--ink); }
+.list-item-desc { font-size: 0.74rem; color: var(--muted); margin-top: 0.15rem; }
+
+/* ── FLIGHT CARD ── */
+.flight-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 14px; padding: 1.1rem 1.25rem; }
+.flight-card-inner { display: flex; align-items: center; gap: 1.5rem; flex-wrap: wrap; }
+.flight-leg { display: flex; align-items: center; gap: 0.75rem; flex: 1; min-width: 200px; }
+.airport-block { text-align: center; }
+.airport-code { font-family: 'Shippori Mincho', serif; font-size: 1.6rem; font-weight: 700; line-height: 1; }
+.airport-city { font-size: 0.6rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; }
+.flight-arrow { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 0.2rem; }
+.flight-line { width: 100%; height: 1px; background: linear-gradient(90deg, var(--border), var(--ink), var(--border)); position: relative; }
+.flight-line::after { content: '✈'; position: absolute; top: -9px; left: 50%; transform: translateX(-50%); font-size: 0.9rem; }
+.flight-meta { font-size: 0.7rem; color: var(--muted); text-align: center; }
+.flight-times { display: flex; justify-content: space-between; width: 100%; font-size: 0.75rem; font-weight: 600; }
+.flight-badge { font-size: 0.65rem; padding: 0.2rem 0.6rem; border-radius: 999px; font-weight: 600; letter-spacing: 0.05em; white-space: nowrap; }
+.badge-air-canada { background: #fff0f0; color: #c0392b; border: 1px solid #f5c6c6; }
+.badge-air-premia { background: #f0f4ff; color: #2e4057; border: 1px solid #c6d4f5; }
+.badge-westjet    { background: #f0fff4; color: #2d6a4f; border: 1px solid #c6f0d4; }
+.badge-bullet     { background: #fdf6e0; color: #b8860b; border: 1px solid #f0dfa0; }
+.transit-card { background: #fdf8f3; border: 1px solid #e8ddd0; border-radius: 10px; padding: 1rem 1.25rem; display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
+.transit-icon { font-size: 1.5rem; }
+.transit-info { flex: 1; }
+.transit-route { font-weight: 600; font-size: 0.9rem; }
+.transit-detail { font-size: 0.75rem; color: var(--muted); }
+
+/* ── FOOD SPECIALTIES ── */
+.specialty-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 0.75rem; margin-bottom: 1rem; }
+.specialty-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 10px; padding: 0.85rem 1rem; }
+.specialty-name { font-weight: 600; font-size: 0.85rem; margin-bottom: 0.2rem; }
+.specialty-jp { font-size: 0.72rem; color: var(--muted); font-style: italic; }
+
+/* ── BUDGET TAB ── */
+.budget-hero { background: var(--ink); color: var(--paper); border-radius: 16px; padding: 2rem; margin-bottom: 2rem; position: relative; overflow: hidden; }
+.budget-hero::before { content: '¥'; font-family: 'Shippori Mincho', serif; font-size: 14rem; position: absolute; right: -1rem; top: -2rem; opacity: 0.05; line-height: 1; }
+.budget-hero h2 { font-family: 'Shippori Mincho', serif; font-size: 1.2rem; color: var(--light-muted); margin-bottom: 0.4rem; }
+.budget-total { font-family: 'Shippori Mincho', serif; font-size: 3rem; font-weight: 700; color: #fff; line-height: 1; }
+.budget-subtitle { font-size: 0.78rem; color: var(--light-muted); margin-top: 0.4rem; }
+.budget-remaining { margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid #333; display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: gap; }
+.budget-remaining-label { font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--light-muted); }
+.budget-remaining-amount { font-family: 'Shippori Mincho', serif; font-size: 2rem; font-weight: 700; color: #6fcf97; }
+.budget-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 1rem; margin-bottom: 2rem; }
+.budget-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 14px; padding: 1.25rem; }
+.budget-card-label { font-size: 0.7rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.4rem; }
+.budget-card-amount { font-family: 'Shippori Mincho', serif; font-size: 1.8rem; font-weight: 700; margin-bottom: 0.6rem; }
+.budget-bar-track { height: 6px; background: var(--border); border-radius: 999px; overflow: hidden; }
+.budget-bar-fill { height: 100%; border-radius: 999px; }
+.budget-card-pct { font-size: 0.7rem; color: var(--muted); margin-top: 0.4rem; }
+.budget-chart { background: var(--card-bg); border: 1px solid var(--border); border-radius: 14px; padding: 1.5rem; margin-bottom: 2rem; }
+.budget-chart h3 { font-family: 'Shippori Mincho', serif; font-size: 1.1rem; margin-bottom: 1.25rem; }
+.donut-wrap { display: flex; align-items: center; gap: 2.5rem; flex-wrap: wrap; }
+.donut-svg { flex-shrink: 0; }
+.donut-legend { display: flex; flex-direction: column; gap: 0.75rem; }
+.legend-item { display: flex; align-items: center; gap: 0.6rem; font-size: 0.82rem; }
+.legend-dot { width: 12px; height: 12px; border-radius: 3px; flex-shrink: 0; }
+.legend-name { font-weight: 500; }
+.legend-val { color: var(--muted); font-size: 0.75rem; margin-left: auto; padding-left: 1rem; }
+.spending-guide { background: var(--card-bg); border: 1px solid var(--border); border-radius: 14px; padding: 1.5rem; }
+.spending-guide h3 { font-family: 'Shippori Mincho', serif; font-size: 1.1rem; margin-bottom: 1rem; }
+.spending-rows { display: flex; flex-direction: column; gap: 0; }
+.spending-row { display: flex; justify-content: space-between; align-items: center; padding: 0.7rem 0; border-bottom: 1px solid var(--border); font-size: 0.82rem; }
+.spending-row:last-child { border-bottom: none; }
+.spending-row-label { color: var(--muted); }
+.spending-row-amount { font-weight: 600; }
+.spending-row-note { font-size: 0.7rem; color: var(--light-muted); text-align: right; }
+.spending-row-right { text-align: right; }
+
+/* ── CITY SECTION ── */
+.city-section { border-left: 4px solid; padding-left: 1.5rem; margin-bottom: 3rem; }
+.city-section.osaka   { border-color: var(--osaka); }
+.city-section.kyoto   { border-color: var(--kyoto); }
+.city-section.tokyo   { border-color: var(--tokyo); }
+.city-section.seoul   { border-color: var(--seoul); }
+.city-section.transit { border-color: var(--transit); }
+
+@media (max-width: 600px) {
+  .cards-grid { grid-template-columns: 1fr; }
+  .flight-card-inner { flex-direction: column; }
+  header h1 { font-size: 1.8rem; }
+  .budget-total { font-size: 2.2rem; }
+  .donut-wrap { flex-direction: column; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="header-label">Trip Planner · Mar–Apr 2025</div>
+    <h1>Japan <span>&</span> Seoul</h1>
+    <div class="header-dates">Mar 22 → Apr 7 · Washington D.C. → Osaka → Kyoto → Tokyo → Seoul → Home</div>
+  </div>
+</header>
+
+<!-- TAB NAV -->
+<nav class="tab-nav">
+  <div class="tab-nav-inner">
+    <button class="tab-btn active"       onclick="showTab('overview')">🗺 Overview</button>
+    <button class="tab-btn budget"       onclick="showTab('budget')">💴 Budget</button>
+    <button class="tab-btn osaka"        onclick="showTab('osaka')">🏯 Osaka</button>
+    <button class="tab-btn kyoto"        onclick="showTab('kyoto')">⛩ Kyoto</button>
+    <button class="tab-btn tokyo"        onclick="showTab('tokyo')">🗼 Tokyo</button>
+    <button class="tab-btn seoul"        onclick="showTab('seoul')">🇰🇷 Seoul</button>
+    <button class="tab-btn"             onclick="showTab('flights')">✈ Flights</button>
+  </div>
+</nav>
+
+<main>
+
+<!-- ══════════════════════════════════════════ -->
+<!-- OVERVIEW TAB                               -->
+<!-- ══════════════════════════════════════════ -->
+<div id="tab-overview" class="tab-pane active">
+  <div class="timeline-strip">
+    <h3>Trip Timeline</h3>
+    <div class="timeline">
+      <div class="tl-stop transit">
+        <div class="tl-dot"></div>
+        <div class="tl-label">IAD</div>
+        <div class="tl-dates">Mar 22</div>
+      </div>
+      <div class="tl-stop transit">
+        <div class="tl-dot"></div>
+        <div class="tl-label">YUL→YVR</div>
+        <div class="tl-dates">Mar 23</div>
+      </div>
+      <div class="tl-stop osaka">
+        <div class="tl-dot"></div>
+        <div class="tl-label">Osaka</div>
+        <div class="tl-dates">Mar 24–27</div>
+      </div>
+      <div class="tl-stop kyoto">
+        <div class="tl-dot"></div>
+        <div class="tl-label">Kyoto</div>
+        <div class="tl-dates">Mar 27–29</div>
+      </div>
+      <div class="tl-stop tokyo">
+        <div class="tl-dot"></div>
+        <div class="tl-label">Tokyo</div>
+        <div class="tl-dates">Mar 29–Apr 4</div>
+      </div>
+      <div class="tl-stop seoul">
+        <div class="tl-dot"></div>
+        <div class="tl-label">Seoul</div>
+        <div class="tl-dates">Apr 4–6</div>
+      </div>
+      <div class="tl-stop transit">
+        <div class="tl-dot"></div>
+        <div class="tl-label">ICN→BWI</div>
+        <div class="tl-dates">Apr 6–7</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quick stats -->
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:1rem;margin-bottom:2rem;">
+    <div style="background:var(--card-bg);border:1px solid var(--border);border-radius:12px;padding:1rem 1.2rem;">
+      <div style="font-size:0.65rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--muted);margin-bottom:0.3rem;">Total Days</div>
+      <div style="font-family:'Shippori Mincho',serif;font-size:2rem;font-weight:700;">17</div>
+    </div>
+    <div style="background:var(--card-bg);border:1px solid var(--border);border-radius:12px;padding:1rem 1.2rem;">
+      <div style="font-size:0.65rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--muted);margin-bottom:0.3rem;">Cities</div>
+      <div style="font-family:'Shippori Mincho',serif;font-size:2rem;font-weight:700;">4</div>
+    </div>
+    <div style="background:var(--card-bg);border:1px solid var(--border);border-radius:12px;padding:1rem 1.2rem;">
+      <div style="font-size:0.65rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--muted);margin-bottom:0.3rem;">Flights</div>
+      <div style="font-family:'Shippori Mincho',serif;font-size:2rem;font-weight:700;">8</div>
+    </div>
+    <div style="background:var(--card-bg);border:1px solid var(--border);border-radius:12px;padding:1rem 1.2rem;">
+      <div style="font-size:0.65rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--muted);margin-bottom:0.3rem;">Hotels</div>
+      <div style="font-family:'Shippori Mincho',serif;font-size:2rem;font-weight:700;">5</div>
+    </div>
+    <div style="background:var(--card-bg);border:1px solid var(--border);border-radius:12px;padding:1rem 1.2rem;">
+      <div style="font-size:0.65rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--muted);margin-bottom:0.3rem;">Budget Left</div>
+      <div style="font-family:'Shippori Mincho',serif;font-size:1.6rem;font-weight:700;color:#2d6a4f;">$5,759</div>
+    </div>
+    <div style="background:var(--card-bg);border:1px solid var(--border);border-radius:12px;padding:1rem 1.2rem;">
+      <div style="font-size:0.65rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--muted);margin-bottom:0.3rem;">Max Budget</div>
+      <div style="font-family:'Shippori Mincho',serif;font-size:1.6rem;font-weight:700;">$11,127</div>
+    </div>
+  </div>
+
+  <!-- Hotels at a glance -->
+  <div class="sugg-divider">Hotels at a Glance</div>
+  <div class="cards-grid">
+    <div class="hotel-card">
+      <div class="hotel-color-bar" style="background:var(--transit)"></div>
+      <img class="hotel-img" src="https://maps.googleapis.com/maps/api/place/photo?maxwidth=600&photo_reference=AelY_CtPdgvtYqPwaxvJiCqXkFe2Q7yEiCaZNL5ULgzBm-WkMRETb7iiCT9cH9RBE0jj9X3_7GlN-jnq8q7nUPWdFXB9VpWTpLYnMHE3e9r0bENrVIwJ3ehlH3MExjcPK6N5Rlao4WVX3pB9QJNTc9aVuqF2AwEbZFdVz0HBvZ1LLQamVh&key=AIzaSyBkZfCbFDXH_p_KlWN5aIlpF6bkFYMqMVs" onerror="this.src='';this.style.display='none'" alt="Country Inn Dulles" loading="lazy">
+      <div class="hotel-body">
+        <div class="hotel-name">Country Inn & Suites — Dulles</div>
+        <div class="hotel-dates">Mar 22 · 1 night · ★ 3.7</div>
+        <div class="hotel-review">"Free airport shuttle, long-term parking, breakfast from 6am." Pre-flight night-before stay.</div>
+      </div>
+    </div>
+    <div class="hotel-card">
+      <div class="hotel-color-bar" style="background:var(--osaka)"></div>
+      <img class="hotel-img" src="https://maps.googleapis.com/maps/api/place/photo?maxwidth=600&photo_reference=AelY_CsEfhQj4gAGKQ7yfVlbH8F0rW6-ybDx9Gc83sVDT0s4y1S7vJPJO5hN1B_EEzCn3G9JRFQFlB-mE0uZGaxxv5biBdZ5ZnVX0u2b5T0DuQexm0BqJJdizLY6IUyMrGc-R3dBIyKIhw8pMG0L8k2J3fIPl3Z7Zc9IhGk_cEdnc_Qa6V&key=AIzaSyBkZfCbFDXH_p_KlWN5aIlpF6bkFYMqMVs" onerror="this.style.display='none'" alt="Hotel Code Shinsaibashi" loading="lazy">
+      <div class="hotel-body">
+        <div class="hotel-name">Hotel Code Shinsaibashi — Osaka</div>
+        <div class="hotel-dates">Mar 24–27 · 3 nights · ★ 4.1</div>
+        <div class="hotel-review">"Right in the heart of everything — Dotonbori 10 min walk, Shinsaibashi shopping at your doorstep."</div>
+      </div>
+    </div>
+    <div class="hotel-card">
+      <div class="hotel-color-bar" style="background:var(--kyoto)"></div>
+      <img class="hotel-img" src="https://lh3.googleusercontent.com/p/AF1QipMhJBuZRqI98gGOv4pvIFjWF7Q42bIPgpJj8oqm=s1600-w800" onerror="this.style.display='none'" alt="Yadoya Kikokuso" loading="lazy">
+      <div class="hotel-body">
+        <div class="hotel-name">Yadoya Kikokuso — Kyoto</div>
+        <div class="hotel-dates">Mar 27–29 · 2 nights · ★ 4.8</div>
+        <div class="hotel-review">"140 years in the same family. Traditional ryokan with koi pond garden — one of a kind."</div>
+      </div>
+    </div>
+    <div class="hotel-card">
+      <div class="hotel-color-bar" style="background:var(--tokyo)"></div>
+      <img class="hotel-img" src="https://lh3.googleusercontent.com/p/AF1QipNzD7O2KxQ2y2p-jSGOv2m4UDYkILxRkXiDX9Q=s1600-w800" onerror="this.style.display='none'" alt="Hotel Resol Stay Akihabara" loading="lazy">
+      <div class="hotel-body">
+        <div class="hotel-name">Hotel Resol Stay Akihabara — Tokyo</div>
+        <div class="hotel-dates">Mar 29 – Apr 4 · 6 nights · ★ 4.5</div>
+        <div class="hotel-review">"Gorgeous greenery lobby, robot greeter, bath salts, exceptional staff. Best hotel in Japan."</div>
+      </div>
+    </div>
+    <div class="hotel-card">
+      <div class="hotel-color-bar" style="background:var(--seoul)"></div>
+      <img class="hotel-img" src="https://lh3.googleusercontent.com/p/AF1QipMf7tH0LU7WT4L3q8z7fTLW_lUFhfU-f3Z7gJk=s1600-w800" onerror="this.style.display='none'" alt="AMID Hotel Seoul" loading="lazy">
+      <div class="hotel-body">
+        <div class="hotel-name">AMID Hotel Seoul</div>
+        <div class="hotel-dates">Apr 4–6 · 2 nights · ★ 4.2</div>
+        <div class="hotel-review">"Walking distance to Gyeongbokgung and Insadong. Breakfast buffet, top-tier service."</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════ -->
+<!-- BUDGET TAB                                 -->
+<!-- ══════════════════════════════════════════ -->
+<div id="tab-budget" class="tab-pane">
+  <div class="budget-hero">
+    <h2>Total Max Budget</h2>
+    <div class="budget-total">$11,126.60</div>
+    <div class="budget-subtitle">Washington D.C. · Mar 22 – Apr 7 · 2 travelers</div>
+    <div class="budget-remaining">
+      <div>
+        <div class="budget-remaining-label">Already Committed</div>
+        <div style="font-family:'Shippori Mincho',serif;font-size:1.5rem;font-weight:700;color:#eb5757;margin-top:0.2rem;">$5,367.29</div>
+      </div>
+      <div style="text-align:right;">
+        <div class="budget-remaining-label">Spending Money Left</div>
+        <div class="budget-remaining-amount">$5,759.31</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Category cards -->
+  <div class="budget-cards">
+    <div class="budget-card">
+      <div class="budget-card-label">✈ Flights</div>
+      <div class="budget-card-amount" style="color:var(--red);">$2,751.29</div>
+      <div class="budget-bar-track"><div class="budget-bar-fill" style="width:24.7%;background:var(--red);"></div></div>
+      <div class="budget-card-pct">24.7% of budget · 8 flight legs</div>
+    </div>
+    <div class="budget-card">
+      <div class="budget-card-label">🏨 Hotels</div>
+      <div class="budget-card-amount" style="color:var(--kyoto);">$2,403.00</div>
+      <div class="budget-bar-track"><div class="budget-bar-fill" style="width:21.6%;background:var(--kyoto);"></div></div>
+      <div class="budget-card-pct">21.6% of budget · 14 nights total</div>
+    </div>
+    <div class="budget-card">
+      <div class="budget-card-label">🚄 Trains</div>
+      <div class="budget-card-amount" style="color:var(--gold);">$213.00</div>
+      <div class="budget-bar-track"><div class="budget-bar-fill" style="width:1.9%;background:var(--gold);"></div></div>
+      <div class="budget-card-pct">1.9% of budget · 2 Shinkansen legs</div>
+    </div>
+    <div class="budget-card">
+      <div class="budget-card-label">🍜 Food & Dining</div>
+      <div class="budget-card-amount" style="color:var(--osaka);">TBD</div>
+      <div class="budget-bar-track"><div class="budget-bar-fill" style="width:0%;background:var(--osaka);"></div></div>
+      <div class="budget-card-pct">~$60–100/day pp est. · 17 days</div>
+    </div>
+    <div class="budget-card">
+      <div class="budget-card-label">🎫 Activities</div>
+      <div class="budget-card-amount" style="color:var(--tokyo);">TBD</div>
+      <div class="budget-bar-track"><div class="budget-bar-fill" style="width:0%;background:var(--tokyo);"></div></div>
+      <div class="budget-card-pct">Temples, karts, aquarium, etc.</div>
+    </div>
+    <div class="budget-card">
+      <div class="budget-card-label">🛍 Shopping</div>
+      <div class="budget-card-amount" style="color:var(--seoul);">TBD</div>
+      <div class="budget-bar-track"><div class="budget-bar-fill" style="width:0%;background:var(--seoul);"></div></div>
+      <div class="budget-card-pct">Akihabara, Shinsaibashi, Seoul…</div>
+    </div>
+  </div>
+
+  <!-- Donut chart -->
+  <div class="budget-chart">
+    <h3>Budget Breakdown — Committed Costs</h3>
+    <div class="donut-wrap">
+      <svg class="donut-svg" width="180" height="180" viewBox="0 0 180 180">
+        <!-- Donut: total circumference of r=70 = 439.8 -->
+        <!-- Flights: 51.2% = 225.2, Hotels: 44.8% = 196.8, Trains: 4.0% = 17.6 -->
+        <circle cx="90" cy="90" r="70" fill="none" stroke="#f0ebe3" stroke-width="28"/>
+        <!-- Trains (gold) first at offset 0 -->
+        <circle cx="90" cy="90" r="70" fill="none" stroke="#b8860b" stroke-width="28"
+          stroke-dasharray="17.6 422.2" stroke-dashoffset="0" transform="rotate(-90 90 90)"/>
+        <!-- Hotels (purple) after trains -->
+        <circle cx="90" cy="90" r="70" fill="none" stroke="#7b6d8d" stroke-width="28"
+          stroke-dasharray="196.8 243" stroke-dashoffset="-17.6" transform="rotate(-90 90 90)"/>
+        <!-- Flights (red) after hotels -->
+        <circle cx="90" cy="90" r="70" fill="none" stroke="#c0392b" stroke-width="28"
+          stroke-dasharray="225.2 214.6" stroke-dashoffset="-214.4" transform="rotate(-90 90 90)"/>
+        <!-- Center text -->
+        <text x="90" y="84" text-anchor="middle" font-family="Shippori Mincho,serif" font-size="20" font-weight="700" fill="#1a1410">$5,367</text>
+        <text x="90" y="102" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="10" fill="#7a6e63">committed</text>
+      </svg>
+      <div class="donut-legend" style="flex:1;">
+        <div class="legend-item">
+          <div class="legend-dot" style="background:var(--red)"></div>
+          <span class="legend-name">Flights</span>
+          <span class="legend-val">$2,751.29 · 51.2%</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-dot" style="background:var(--kyoto)"></div>
+          <span class="legend-name">Hotels</span>
+          <span class="legend-val">$2,403.00 · 44.8%</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-dot" style="background:var(--gold)"></div>
+          <span class="legend-name">Trains</span>
+          <span class="legend-val">$213.00 · 4.0%</span>
+        </div>
+        <div class="legend-item" style="margin-top:0.5rem;padding-top:0.5rem;border-top:1px solid var(--border);">
+          <div class="legend-dot" style="background:#e8e0d5"></div>
+          <span class="legend-name" style="color:var(--muted)">Remaining budget</span>
+          <span class="legend-val">$5,759.31</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Daily spending guide -->
+  <div class="spending-guide">
+    <h3>Daily Spending Guide · $5,759 Left</h3>
+    <div class="spending-rows">
+      <div class="spending-row">
+        <div>
+          <div>Budget per day (17 days)</div>
+          <div class="spending-row-label">Remaining ÷ days</div>
+        </div>
+        <div class="spending-row-right">
+          <div class="spending-row-amount">$339/day</div>
+          <div class="spending-row-note">for 2 people</div>
+        </div>
+      </div>
+      <div class="spending-row">
+        <div>
+          <div>Budget per person per day</div>
+          <div class="spending-row-label">For meals, activities, transport, shopping</div>
+        </div>
+        <div class="spending-row-right">
+          <div class="spending-row-amount">~$170/pp</div>
+          <div class="spending-row-note">very comfortable</div>
+        </div>
+      </div>
+      <div class="spending-row">
+        <div>
+          <div>Typical meal range — Japan</div>
+          <div class="spending-row-label">Ramen to omakase</div>
+        </div>
+        <div class="spending-row-right">
+          <div class="spending-row-amount">¥800 – ¥15,000</div>
+          <div class="spending-row-note">~$5 – $100 USD</div>
+        </div>
+      </div>
+      <div class="spending-row">
+        <div>
+          <div>Typical meal range — Seoul</div>
+          <div class="spending-row-label">Street food to Korean BBQ</div>
+        </div>
+        <div class="spending-row-right">
+          <div class="spending-row-amount">₩8,000 – ₩60,000</div>
+          <div class="spending-row-note">~$6 – $45 USD</div>
+        </div>
+      </div>
+      <div class="spending-row">
+        <div>
+          <div>Michelin splurge estimate (2 ppl)</div>
+          <div class="spending-row-label">Taian / Hyotei / Narisawa-tier</div>
+        </div>
+        <div class="spending-row-right">
+          <div class="spending-row-amount">$300–$600</div>
+          <div class="spending-row-note">per dinner</div>
+        </div>
+      </div>
+      <div class="spending-row">
+        <div>
+          <div>Shinkansen (already included)</div>
+          <div class="spending-row-label">Osaka→Kyoto + Kyoto→Tokyo</div>
+        </div>
+        <div class="spending-row-right">
+          <div class="spending-row-amount">$213.00 ✓</div>
+          <div class="spending-row-note">committed</div>
+        </div>
+      </div>
+      <div class="spending-row" style="background:#f9fdf9;border-radius:8px;padding:0.7rem 0.75rem;margin-top:0.25rem;">
+        <div>
+          <div style="font-weight:600;">💡 Tip: IC Card for city transit</div>
+          <div class="spending-row-label">Suica (Japan) / T-money (Korea) — load ¥5,000–¥10,000 each</div>
+        </div>
+        <div class="spending-row-right">
+          <div class="spending-row-amount">~$70–140</div>
+          <div class="spending-row-note">for all city transport</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════ -->
+<!-- OSAKA TAB                                  -->
+<!-- ══════════════════════════════════════════ -->
+<div id="tab-osaka" class="tab-pane">
+  <div class="city-section osaka">
+    <div class="section-header">
+      <h2>Osaka</h2>
+      <span class="city-tag" style="background:var(--osaka)">Mar 24–27 · 3 nights</span>
+    </div>
+
+    <!-- Hotel -->
+    <div class="sugg-divider">Hotel</div>
+    <div class="cards-grid full">
+      <div class="hotel-card">
+        <div class="hotel-color-bar" style="background:var(--osaka)"></div>
+        <img class="hotel-img" src="https://lh3.googleusercontent.com/p/AF1QipP3kxh7HuYp9VFc5tDDFcYJkXm2vNQKjGNxW4Ug=s1600-w800" onerror="this.style.display='none'" alt="Hotel Code Shinsaibashi" loading="lazy">
+        <div class="hotel-body">
+          <div class="hotel-name">Hotel Code Shinsaibashi</div>
+          <div class="hotel-dates">📍 Higashishinsaibashi, Chuo Ward · Mar 24–27 · 3 nights · ★ 4.1 (450 reviews)</div>
+          <div class="hotel-review">"The location is absolutely perfect — you're literally in the heart of everything. Dotonbori is just a 10-minute walk, Shinsaibashi shopping street is right there."</div>
+          <div class="card-meta" style="margin-top:0.75rem;">
+            <span class="meta-tag">📍 Shinsaibashi Station</span>
+            <span class="meta-tag">🍜 Near Dotonbori</span>
+            <span class="meta-tag">🏪 7-Eleven next door</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Food Specialties -->
+    <div class="sugg-divider">Osaka Food Specialties</div>
+    <div class="specialty-grid">
+      <div class="specialty-card"><div class="specialty-name">🐙 Takoyaki</div><div class="specialty-jp">Fried octopus balls</div></div>
+      <div class="specialty-card"><div class="specialty-name">🥚 Okonomiyaki</div><div class="specialty-jp">Fried cabbage pancakes</div></div>
+      <div class="specialty-card"><div class="specialty-name">🍢 Kushikatsu</div><div class="specialty-jp">Fried meat & veg skewers</div></div>
+      <div class="specialty-card"><div class="specialty-name">🍜 Kitsune Udon</div><div class="specialty-jp">Noodles with fried tofu</div></div>
+    </div>
+
+    <!-- Sights -->
+    <div class="sugg-divider">Things to Do — Top Picks</div>
+    <div class="cards-grid">
+      <div class="photo-card">
+        <img class="card-img" src="https://lh3.googleusercontent.com/p/AF1QipNEcMLCL7b_Mh7-YDzlrVkp5cQiVL-HCbg2e4DQ=s1600-w600" onerror="this.parentElement.querySelector('.card-img-placeholder').style.display='flex';this.style.display='none'" alt="Dotonbori" loading="lazy">
+        <div class="card-img-placeholder" style="display:none">🌃</div>
+        <div class="card-body">
+          <div class="card-type">🌃 Neighbourhood</div>
+          <div class="card-name">Dotonbori</div>
+          <div class="card-rating"><span class="stars">★★★★☆</span><span class="rating-num">4.4</span><span class="rating-count">(81,801)</span></div>
+          <div class="card-desc">Iconic neon-lit canal district. Giant animated signs, street food, the Glico running man. Best at night — walk the canal and eat everything.</div>
+          <div class="card-hours">Open 24 hours</div>
+        </div>
+      </div>
+      <div class="photo-card">
+        <img class="card-img" src="https://lh3.googleusercontent.com/p/AF1QipNGr77kbJX5FDniYjnWkyq1UQG7HMHQ_E2sO9g=s1600-w600" onerror="this.parentElement.querySelector('.card-img-placeholder').style.display='flex';this.style.display='none'" alt="Osaka Castle" loading="lazy">
+        <div class="card-img-placeholder" style="display:none">🏯</div>
+        <div class="card-body">
+          <div class="card-type">🏯 Castle & Museum</div>
+          <div class="card-name">Osaka Castle</div>
+          <div class="card-rating"><span class="stars">★★★★☆</span><span class="rating-num">4.4</span><span class="rating-count">(92,415)</span></div>
+          <div class="card-desc">Stunning white-and-gold castle with 7 floors of museum and a top-floor observatory. Buy tickets online to skip the long queue. Consider the Aqualiner river cruise.</div>
+          <div class="card-hours">Daily 9:00 AM – 6:00 PM</div>
+        </div>
+      </div>
+      <div class="photo-card">
+        <img class="card-img" src="https://lh3.googleusercontent.com/p/AF1QipMfAM7_IFcxkUSHQiNNn7R4p5OUXb0v8MolLrM=s1600-w600" onerror="this.parentElement.querySelector('.card-img-placeholder').style.display='flex';this.style.display='none'" alt="Osaka Aquarium" loading="lazy">
+        <div class="card-img-placeholder" style="display:none">🐋</div>
+        <div class="card-body">
+          <div class="card-type">🐋 Aquarium</div>
+          <div class="card-name">Osaka Aquarium Kaiyukan</div>
+          <div class="card-rating"><span class="stars">★★★★★</span><span class="rating-num">4.5</span><span class="rating-count">(56,607)</span></div>
+          <div class="card-desc">One of the world's largest aquariums — whale sharks, otters, penguins. Buy timed tickets online. Easy to spend 4–5 hours here.</div>
+          <div class="card-hours">Daily 10:00 AM – 8:00 PM</div>
+        </div>
+      </div>
+      <div class="photo-card">
+        <img class="card-img" src="https://lh3.googleusercontent.com/p/AF1QipN4Z3rAkk_bN1W_VHDLiVOYgN9RLLK6OqNT3Sw=s1600-w600" onerror="this.parentElement.querySelector('.card-img-placeholder').style.display='flex';this.style.display='none'" alt="Kuromon Market" loading="lazy">
+        <div class="card-img-placeholder" style="display:none">🦑</div>
+        <div class="card-body">
+          <div class="card-type">🦑 Market</div>
+          <div class="card-name">Kuromon Market</div>
+          <div class="card-rating"><span class="stars">★★★★☆</span><span class="rating-num">4.1</span><span class="rating-count">(19,955)</span></div>
+          <div class="card-desc">Vibrant covered market for fresh seafood, wagyu skewers, snow crab, and Osaka street food. Walk the whole thing before committing — multiple options for each dish.</div>
+          <div class="card-hours">Daily 9:00 AM – 6:00 PM</div>
+        </div>
+      </div>
+      <div class="photo-card">
+        <img class="card-img" src="https://lh3.googleusercontent.com/p/AF1QipMVBrWX3r_3smF1aSCi1I-XSm8mXCEEjLkCNyA=s1600-w600" onerror="this.parentElement.querySelector('.card-img-placeholder').style.display='flex';this.style.display='none'" alt="Shinsekai" loading="lazy">
+        <div class="card-img-placeholder" style="display:none">🏮</div>
+        <div class="card-body">
+          <div class="card-type">🏮 Neighbourhood</div>
+          <div class="card-name">Shinsekai</div>
+          <div class="card-rating"><span class="stars">★★★★☆</span><span class="rating-num">4.2</span><span class="rating-count">(9,650)</span></div>
+          <div class="card-desc">Retro-futuristic neighbourhood from 1912 — neon signs, old-school arcades, kushikatsu restaurants, and Tsutenkaku Tower. Laid-back Osaka vibe with real local character.</div>
+          <div class="card-hours">Open 24 hours</div>
+        </div>
+      </div>
+      <div class="photo-card">
+        <img class="card-img" src="https://lh3.googleusercontent.com/p/AF1QipPqsJYosBuqEn5g-JC3bx6N1GVGJNklJe7gHnM=s1600-w600" onerror="this.parentElement.querySelector('.card-img-placeholder').style.display='flex';this.style.display='none'" alt="Sumiyoshi Taisha" loading="lazy">
+        <div class="card-img-placeholder" style="display:none">⛩</div>
+        <div class="card-body">
+          <div class="card-type">⛩ Important Shrine</div>
+          <div class="card-name">Sumiyoshi Taisha</div>
+          <div class="card-rating"><span class="stars">★★★★★</span><span class="rating-num">4.5</span><span class="rating-count">(13,256)</span></div>
+          <div class="card-desc">One of Japan's oldest shrines with unique Sumiyoshi-zukuri architecture predating Buddhist influence. Iconic arched red bridge, free entry, rarely crowded.</div>
+          <div class="card-hours">Daily 6:00 AM – 5:00 PM</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- More sights (expandable list) -->
+    <div class="sugg-divider">More Ideas from Tom</div>
+    <div class="list-section">
+      <div class="list-section-header open" style="background:var(--osaka)" onclick="toggleList(this)">
+        <span>More Things to Do in Osaka</span><span class="toggle">▼</span>
+      </div>
+      <div class="list-items open">
+        <div class="list-item"><div class="list-item-dot" style="background:var(--osaka)"></div><div class="list-item-content"><div class="list-item-name">Shinsaibashi-Suji Shopping Street</div><div class="list-item-desc">Massive covered arcade for shopping — luxury to quirky. Right by your hotel.</div></div></div>
+        <div class="list-item"><div class="list-item-dot" style="background:var(--osaka)"></div><div class="list-item-content"><div class="list-item-name">Shitenno-ji</div><div class="list-item-desc">Buddhist temple — one of the oldest in Japan. Peaceful, off the tourist trail. ★4.3</div></div></div>
+        <div class="list-item"><div class="list-item-dot" style="background:var(--osaka)"></div><div class="list-item-content"><div class="list-item-name">Osaka Municipal Housing Museum</div><div class="list-item-desc">Recreation of historic Osaka streets and buildings — a living time capsule.</div></div></div>
+        <div class="list-item"><div class="list-item-dot" style="background:var(--osaka)"></div><div class="list-item-content"><div class="list-item-name">Minami (Namba)</div><div class="list-item-desc">Downtown Osaka hub — shopping, entertainment, transit, great food.</div></div></div>
+        <div class="list-item"><div class="list-item-dot" style="background:var(--osaka)"></div><div class="list-item-content"><div class="list-item-name">Mozu Tombs</div><div class="list-item-desc">Oldest tombs in Japan — a UNESCO World Heritage site, a bit of a trek but unique.</div></div></div>
+        <div class="list-item"><div class="list-item-dot" style="background:var(--osaka)"></div><div class="list-item-content"><div class="list-item-name">Tsutenkaku Tower</div><div class="list-item-desc">Retro 103m observation tower in Shinsekai. Views of Osaka, fun outdoor slide. ★4.1</div></div></div>
+      </div>
+    </div>
+
+    <!-- Restaurants -->
+    <div class="sugg-divider">Top Restaurant Picks</div>
+    <div class="cards-grid">
+      <div class="photo-card">
+        <div class="card-img-placeholder">🍣</div>
+        <div class="card-body">
+          <div class="card-type">🍣 Omakase</div>
+          <div class="card-name">YOSAKURA Japanese Omakase</div>
+          <div class="card-rating"><span class="stars">★★★★★</span><span class="rating-num">4.9</span><span class="rating-count">(1,762)</span></div>
+          <div class="card-desc">Elegant wood-accented dining in Shinsaibashi. English-speaking staff, wagyu & sushi courses. Book ahead. Dinner only.</div>
+          <div class="card-hours">Daily 6:00 PM – 10:00 PM</div>
+        </div>
+      </div>
+      <div class="photo-card">
+        <div class="card-img-placeholder">🥚</div>
+        <div class="card-body">
+          <div class="card-type">🥚 Okonomiyaki</div>
+          <div class="card-name">Chitose</div>
+          <div class="card-rating"><span class="stars">★★★★★</span><span class="rating-num">4.7</span><span class="rating-count">(1,721)</span></div>
+          <div class="card-desc">Legendary okonomiyaki cooked right in front of you. Arrive before opening to queue. Seafood mix is the standout. Small, local, essential.</div>
+          <div class="card-hours">Thu–Mon 11:30 AM–2:30 PM, 5–8 PM</div>
+        </div>
+      </div>
+      <div class="photo-card">
+        <div class="card-img-placeholder">🐟</div>
+        <div class="card-body">
+          <div class="card-type">🐟 Eel Rice</div>
+          <div class="card-name">DOTONBORI KUROFUNE</div>
+          <div class="card-rating"><span class="stars">★★★★★</span><span class="rating-num">4.9</span><span class="rating-count">(1,753)</span></div>
+          <div class="card-desc">Traditional unaju (eel over rice) in a cozy izakaya. Rich, satisfying, very affordable. Lunch only — reserve ahead.</div>
+          <div class="card-hours">Daily 11:00 AM – 3:00 PM</div>
+        </div>
+      </div>
+      <div class="photo-card">
+        <div class="card-img-placeholder">🍜</div>
+        <div class="card-body">
+          <div class="card-type">🍜 Vegan Ramen</div>
+          <div class="card-name">The Fire</div>
+          <div class="card-rating"><span class="stars">★★★★★</span><span class="rating-num">4.8</span><span class="rating-count">(880)</span></div>
+          <div class="card-desc">Vegan ramen and incredibly crispy gyoza in a cool bar setting. Great late-night option. Cocktails excellent too.</div>
+          <div class="card-hours">Daily 12–3:30 PM, 6 PM–2:30 AM</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="list-section" style="margin-top:0.5rem;">
+      <div class="list-section-header" style="background:var(--osaka)" onclick="toggleList(this)">
+        <span>Tom's Full Osaka Restaurant List (20 more spots)</span><span class="toggle">▼</span>
+      </div>
+      <div class="list-items">
+        <div class="list-item"><div class="list-item-dot" style="background:var(--osaka)"></div><div class="list-item-content"><div class="list-item-name">Hommachi Seimenjo Chukasobakobo</div><div class="list-item-desc">Ramen shop close to Dotonbori</div></div></div>
+        <div class="list-item"><div class="list-item-dot" style="background:var(--osaka)"></div><div class="list-item-content"><div class="list-item-name">Ramen Hayato</div><div class="list-item-desc">Old and famous ramen shop</div></div></div>
+        <div class="list-item"><div class="list-item-dot" style="background:var(--osaka)"></div><div class="list-item-content"><div class="list-item-name">Daidokoro Kamiya</div><div class="list-item-desc">Apps, drinks, and seafood dishes</div></div></div>
+        <div class="list-item"><div class="list-item-dot" style="background:var(--osaka)"></div><div class="list-item-content"><div class="list-item-name">Soba Takama</div><div class="list-item-desc">Soba "piled high" on bamboo plates in a traditional restaurant</div></div></div>
+        <div class="list-item"><div class="list-item-dot" style="background:var(--osaka)"></div><div class="list-item-content"><div class="list-item-name">Benikurage</div><div class="list-item-desc">Food made to pair with sake</div></div></div>
+        <div class="list-item"><div class="list-item-dot" style="background:var(--osaka)"></div><div class="list-item-content"><div class="list-item-name">Sobakiri Karani</div><div class="list-item-desc">Course ground soba in a casual and fun restaurant</div></div></div>
+        <div class="list-item"><div class="list-item-dot" style="background:var(--osaka)"></div><div class="list-item-content"><div class="list-item-name">Sobakiri Gaku</div><div class="list-item-desc">Soba served at a counter</div></div></div>
+        <div class="list-item"><div class="list-item-dot" style="background:var(--osaka)"></div><div class="list-item-content"><div class="list-item-name">AKA to SHIRO</div><div class="list-item-desc">Reasonably priced sushi using Kansai-style vinegar</div></div></div>
+        <div class="list-item"><div class="list-item-dot" style="background:var(--osaka)"></div><div class="list-item-content"><div class="list-item-name">Tanpopo</div><div class="list-item-desc">Teppanyaki restaurant</div></div></div>
+        <div class="list-item"><div class="list-item-dot" style="background:var(--osaka)"></div><div class="list-item-content"><div class="list-item-name">Sushitsune</div><div class="list-item-desc">Famous for pickled mackerel sushi</div></div></div>
+        <div class="list-item"><div class="list-item-dot" style="background:var(--osaka)"></div><div class="list-item-content"><div class="list-item-name">Sushidokoro Kaihara</div><div class="list-item-desc">Sushi paired with different soy sauces depending on the dish</div></div></div>
+        <div class="list-item"><div class="list-item-dot" style="background:var(--osaka)"></div><div class="list-item-content"><div class="list-item-name">Kitashinchi Shien</div><div class="list-item-desc">Yakitori prix fixe using Kyushu chickens</div></div></div>
+        <div class="list-item"><div class="list-item-dot" style="background:var(--osaka)"></div><div class="list-item-content"><div class="list-item-name">Aozora Blue</div><div class="list-item-desc">Udon noodle restaurant</div></div></div>
+        <div class="list-item"><div class="list-item-dot" style="background:var(--osaka)"></div><div class="list-item-content"><div class="list-item-name">Yoshokuya Fujiya</div><div class="list-item-desc">Western-influenced Japanese (Yoshoku) — in business since 1935</div></div></div>
+        <div class="list-item"><div class="list-item-dot" style="background:var(--osaka)"></div><div class="list-item-content"><div class="list-item-name">Tonkatsu Fujii</div><div class="list-item-desc">French-influenced tonkatsu</div></div></div>
+        <div class="list-item"><div class="list-item-dot" style="background:var(--osaka)"></div><div class="list-item-content"><div class="list-item-name">Sakeya Sakana Yoshimura</div><div class="list-item-desc">Sake paired with bar snack menu items</div></div></div>
+        <div class="list-item"><div class="list-item-dot" style="background:var(--osaka)"></div><div class="list-item-content"><div class="list-item-name">Oryori Amenimomakezu</div><div class="list-item-desc">Japanese comfort food and bar</div></div></div>
+        <div class="list-item"><div class="list-item-dot" style="background:var(--osaka)"></div><div class="list-item-content"><div class="list-item-name">Mugito Mensuke</div><div class="list-item-desc">Good-looking ramen shop</div></div></div>
+        <div class="list-item"><div class="list-item-dot" style="background:var(--osaka)"></div><div class="list-item-content"><div class="list-item-name">Sobadokoro Toki</div><div class="list-item-desc">Comfort food soba open late</div></div></div>
+        <div class="list-item"><div class="list-item-dot" style="background:var(--osaka)"></div><div class="list-item-content"><div class="list-item-name">JIBUNDOKI</div><div class="list-item-desc">Teppanyaki restaurant</div></div></div>
+        <div class="list-item"><div class="list-item-dot" style="background:var(--osaka)"></div><div class="list-item-content"><div class="list-item-name">Kushikatsu Gojoya</div><div class="list-item-desc">Upscale kushikatsu with a large variety of options</div></div></div>
+        <div class="list-item"><div class="list-item-dot" style="background:#c0392b;opacity:0.6"></div><div class="list-item-content"><div class="list-item-name">⭐ Taian</div><div class="list-item-desc">3-star Michelin restaurant — expensive, requires advance booking months ahead</div></div></div>
+      </div>
+    </div>
+
+    <div class="sugg-divider">Departure</div>
+    <div class="transit-card">
+      <div class="transit-icon">🚄</div>
+      <div class="transit-info"><div class="transit-route">Osaka → Kyoto · Shinkansen</div><div class="transit-detail">Thu Mar 27 · Departure 11:00 AM · ~15 min · Included in $213 train budget</div></div>
+      <span class="flight-badge badge-bullet">Shinkansen</span>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════ -->
+<!-- KYOTO TAB                                  -->
+<!-- ══════════════════════════════════════════ -->
+<div id="tab-kyoto" class="tab-pane">
+  <div class="city-section kyoto">
+    <div class="section-header">
+      <h2>Kyoto</h2>
+      <span class="city-tag" style="background:var(--kyoto)">Mar 27–29 · 2 nights</span>
+    </div>
+
+    <div class="sugg-divider">Hotel</div>
+    <div class="cards-grid full">
+      <div class="hotel-card">
+        <div class="hotel-color-bar" style="background:var(--kyoto)"></div>
+        <img class="hotel-img" src="https://lh3.googleusercontent.com/p/AF1QipMhJBuZRqI98gGOv4pvIFjWF7Q42bIPgpJj8oqm=s1600-w800" onerror="this.style.display='none'" alt="Yadoya Kikokuso" loading="lazy">
+        <div class="hotel-body">
+          <div class="hotel-name">Yadoya Kikokuso (Ryokan)</div>
+          <div class="hotel-dates">📍 Sumiyoshicho, Shimogyo Ward · Mar 27–29 · 2 nights · ★ 4.8 (151 reviews)</div>
+          <div class="hotel-review">"Third generation of the same family — 140 years. A stunning koi pond garden, tatami rooms, futon beds. One of the best stays in Kyoto."</div>
+          <div class="card-meta" style="margin-top:0.75rem;">
+            <span class="meta-tag">🏮 Traditional Ryokan</span><span class="meta-tag">🐟 Koi Pond</span><span class="meta-tag">🛏 Futon Beds</span><span class="meta-tag">🚶 Walk from Kyoto Station</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sugg-divider">Top Sights</div>
+    <div class="cards-grid">
+      <div class="photo-card">
+        <img class="card-img" src="https://lh3.googleusercontent.com/p/AF1QipNlN_A0Cv62wqBb1CqCKjYAW4zWMW9z_UEZY6LK=s1600-w600" onerror="this.parentElement.querySelector('.card-img-placeholder').style.display='flex';this.style.display='none'" alt="Fushimi Inari" loading="lazy">
+        <div class="card-img-placeholder" style="display:none">⛩</div>
+        <div class="card-body">
+          <div class="card-type">⛩ Shrine · South</div>
+          <div class="card-name">Fushimi Inari Taisha</div>
+          <div class="card-rating"><span class="stars">★★★★★</span><span class="rating-num">4.6</span><span class="rating-count">(85,459)</span></div>
+          <div class="card-desc">Thousands of vermilion torii gates climbing Mt. Inari. Full summit takes 2–3 hours. Go early morning. Open 24hrs — sunrise is magical.</div>
+          <div class="card-hours">Open 24 hours</div>
+        </div>
+      </div>
+      <div class="photo-card">
+        <img class="card-img" src="https://lh3.googleusercontent.com/p/AF1QipPGjHPTJ-BQTJtY1iKbpRHMVi-5F5B-Lnl73oQ=s1600-w600" onerror="this.parentElement.querySelector('.card-img-placeholder').style.display='flex';this.style.display='none'" alt="Kinkakuji" loading="lazy">
+        <div class="card-img-placeholder" style="display:none">🏯</div>
+        <div class="card-body">
+          <div class="card-type">🏯 Temple · North</div>
+          <div class="card-name">Kinkaku-ji (Golden Pavilion)</div>
+          <div class="card-rating"><span class="stars">★★★★★</span><span class="rating-num">4.5</span><span class="rating-count">(65,964)</span></div>
+          <div class="card-desc">Gold-leaf pavilion reflected in a mirror pond. One of Japan's most iconic views. Pair with Ryoan-ji Zen rock garden (20-min walk).</div>
+          <div class="card-hours">Daily 9:00 AM – 5:00 PM</div>
+        </div>
+      </div>
+      <div class="photo-card">
+        <img class="card-img" src="https://lh3.googleusercontent.com/p/AF1QipNiVQV5dKiN8L3h3-_lL7wIrTVjFJ9X1yLTCAA=s1600-w600" onerror="this.parentElement.querySelector('.card-img-placeholder').style.display='flex';this.style.display='none'" alt="Kiyomizudera" loading="lazy">
+        <div class="card-img-placeholder" style="display:none">🌿</div>
+        <div class="card-body">
+          <div class="card-type">🌿 Temple · East</div>
+          <div class="card-name">Kiyomizudera</div>
+          <div class="card-rating"><span class="stars">★★★★★</span><span class="rating-num">4.6</span><span class="rating-count">(67,156)</span></div>
+          <div class="card-desc">Iconic wooden terrace built without nails, perched on a hillside with sweeping views. Near Gion — combine into a half-day east Kyoto walk.</div>
+          <div class="card-hours">Daily 6:00 AM – 6:00 PM</div>
+        </div>
+      </div>
+      <div class="photo-card">
+        <img class="card-img" src="https://lh3.googleusercontent.com/p/AF1QipMHSrpBx-V4lBN4kQefhBfBjUz6V2nWIPOKT-Q=s1600-w600" onerror="this.parentElement.querySelector('.card-img-placeholder').style.display='flex';this.style.display='none'" alt="Arashiyama" loading="lazy">
+        <div class="card-img-placeholder" style="display:none">🎋</div>
+        <div class="card-body">
+          <div class="card-type">🎋 District · West</div>
+          <div class="card-name">Arashiyama</div>
+          <div class="card-rating"><span class="stars">★★★★★</span><span class="rating-num">4.5</span><span class="rating-count">(7,010)</span></div>
+          <div class="card-desc">Bamboo grove, Togetsukyo Bridge, Tenryu-ji garden. A full half-day area on the outskirts of town. Cherry blossoms here in late March!</div>
+          <div class="card-hours">Open all hours (temple hours vary)</div>
+        </div>
+      </div>
+      <div class="photo-card">
+        <img class="card-img" src="https://lh3.googleusercontent.com/p/AF1QipM1wV2KsJLEVyvnVm6ZTQ5r3kaqBZgWVzlbW3M=s1600-w600" onerror="this.parentElement.querySelector('.card-img-placeholder').style.display='flex';this.style.display='none'" alt="Philosopher's Path" loading="lazy">
+        <div class="card-img-placeholder" style="display:none">🌸</div>
+        <div class="card-body">
+          <div class="card-type">🌸 Path · East</div>
+          <div class="card-name">Philosopher's Path</div>
+          <div class="card-rating"><span class="stars">★★★★★</span><span class="rating-num">4.6</span><span class="rating-count">(2,793)</span></div>
+          <div class="card-desc">Canal-side path lined with cherry trees — late March is peak season. Calm, reflective walk connecting temples in the east. Connects Ginkakuji to Nanzenji.</div>
+          <div class="card-hours">Open 24 hours</div>
+        </div>
+      </div>
+      <div class="photo-card">
+        <img class="card-img" src="https://lh3.googleusercontent.com/p/AF1QipPjxqSj7Hy3h0lBTXVH-o9WPLfbBjgZ22pjIQ=s1600-w600" onerror="this.parentElement.querySelector('.card-img-placeholder').style.display='flex';this.style.display='none'" alt="Nishiki Market" loading="lazy">
+        <div class="card-img-placeholder" style="display:none">🏮</div>
+        <div class="card-body">
+          <div class="card-type">🏮 Market · Central</div>
+          <div class="card-name">Nishiki Market</div>
+          <div class="card-rating"><span class="stars">★★★★☆</span><span class="rating-num">4.3</span><span class="rating-count">(50,081)</span></div>
+          <div class="card-desc">"Kyoto's Kitchen" — narrow covered lane of food stalls, snacks, fresh seafood, pickles, sweets. Crowded but essential. Near Pontocho restaurant row.</div>
+          <div class="card-hours">Most stalls open daily</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="list-section">
+      <div class="list-section-header" style="background:var(--kyoto)" onclick="toggleList(this)">
+        <span>Tom's Full Kyoto Sights List (by area)</span><span class="toggle">▼</span>
+      </div>
+      <div class="list-items">
+        <div class="list-item"><div class="list-item-dot" style="background:#999"></div><div class="list-item-content"><div class="list-item-name" style="color:var(--muted);font-size:0.7rem;text-transform:uppercase;letter-spacing:0.1em">CENTRAL</div></div></div>
+        <div class="list-item"><div class="list-item-dot" style="background:var(--kyoto)"></div><div class="list-item-content"><div class="list-item-name">Nijo Castle</div><div class="list-item-desc">Former shogun residence with "nightingale floors" — they actually chirp! ★4.4</div></div></div>
+        <div class="list-item"><div class="list-item-dot" style="background:var(--kyoto)"></div><div class="list-item-content"><div class="list-item-name">Imperial Palace / Sento Palace</div><div class="list-item-desc">Emperor's residence — two palaces side by side in a large park</div></div></div>
+        <div class="list-item"><div class="list-item-dot" style="background:var(--kyoto)"></div><div class="list-item-content"><div class="list-item-name">Pontocho</div><div class="list-item-desc">Famous restaurant row — great evening dining street</div></div></div>
+        <div class="list-item"><div class="list-item-dot" style="background:var(--kyoto)"></div><div class="list-item-content"><div class="list-item-name">Nijo Jinya</div><div class="list-item-desc">Former inn for visiting lords — secret passages and trap doors! Japanese-only tours</div></div></div>
+        <div class="list-item"><div class="list-item-dot" style="background:var(--kyoto)"></div><div class="list-item-content"><div class="list-item-name">Honganji Temples</div><div class="list-item-desc">Important Buddhist temple complex near Kyoto Station</div></div></div>
+        <div class="list-item"><div class="list-item-dot" style="background:var(--kyoto)"></div><div class="list-item-content"><div class="list-item-name">Manga Museum</div><div class="list-item-desc">Because Tom likes that sort of thing 😄</div></div></div>
+        <div class="list-item"><div class="list-item-dot" style="background:#999"></div><div class="list-item-content"><div class="list-item-name" style="color:var(--muted);font-size:0.7rem;text-transform:uppercase;letter-spacing:0.1em">EAST</div></div></div>
+        <div class="list-item"><div class="list-item-dot" style="background:var(--kyoto)"></div><div class="list-item-content"><div class="list-item-name">Higashiyama Historic District</div><div class="list-item-desc">Best-preserved historic streetscape in Kyoto — stone lanes, old machiya townhouses</div></div></div>
+        <div class="list-item"><div class="list-item-dot" style="background:var(--kyoto)"></div><div class="list-item-content"><div class="list-item-name">Kyoto National Museum</div><div class="list-item-desc">Historic and art exhibitions in a Meiji-era building</div></div></div>
+        <div class="list-item"><div class="list-item-dot" style="background:var(--kyoto)"></div><div class="list-item-content"><div class="list-item-name">Gion</div><div class="list-item-desc">Geisha district — best walked at dusk for a chance to spot a geiko or maiko</div></div></div>
+        <div class="list-item"><div class="list-item-dot" style="background:var(--kyoto)"></div><div class="list-item-content"><div class="list-item-name">Maruyama Park</div><div class="list-item-desc">Cherry blossom park — late March is perfect timing for your visit!</div></div></div>
+        <div class="list-item"><div class="list-item-dot" style="background:#999"></div><div class="list-item-content"><div class="list-item-name" style="color:var(--muted);font-size:0.7rem;text-transform:uppercase;letter-spacing:0.1em">SOUTH</div></div></div>
+        <div class="list-item"><div class="list-item-dot" style="background:var(--kyoto)"></div><div class="list-item-content"><div class="list-item-name">Daigoji Temple</div><div class="list-item-desc">Beautiful multi-pagoda temple complex, lovely in spring</div></div></div>
+        <div class="list-item"><div class="list-item-dot" style="background:var(--kyoto)"></div><div class="list-item-content"><div class="list-item-name">Toji Temple</div><div class="list-item-desc">Has the tallest wooden pagoda in Japan</div></div></div>
+        <div class="list-item"><div class="list-item-dot" style="background:var(--kyoto)"></div><div class="list-item-content"><div class="list-item-name">Fushimi Sake District</div><div class="list-item-desc">Sake, baby! Historic sake brewing area near Fushimi Inari</div></div></div>
+        <div class="list-item"><div class="list-item-dot" style="background:#999"></div><div class="list-item-content"><div class="list-item-name" style="color:var(--muted);font-size:0.7rem;text-transform:uppercase;letter-spacing:0.1em">NORTH</div></div></div>
+        <div class="list-item"><div class="list-item-dot" style="background:var(--kyoto)"></div><div class="list-item-content"><div class="list-item-name">Kurama</div><div class="list-item-desc">Rural mountain town with a hot spring — a half-day escape from the city</div></div></div>
+        <div class="list-item"><div class="list-item-dot" style="background:var(--kyoto)"></div><div class="list-item-content"><div class="list-item-name">Sanzenin Temple</div><div class="list-item-desc">Popular temple in a rural area, moss garden</div></div></div>
+        <div class="list-item"><div class="list-item-dot" style="background:var(--kyoto)"></div><div class="list-item-content"><div class="list-item-name">Ryoanji Temple</div><div class="list-item-desc">Famous Zen rock garden — 15 stones, only 14 visible from any angle</div></div></div>
+        <div class="list-item"><div class="list-item-dot" style="background:#999"></div><div class="list-item-content"><div class="list-item-name" style="color:var(--muted);font-size:0.7rem;text-transform:uppercase;letter-spacing:0.1em">WEST</div></div></div>
+        <div class="list-item"><div class="list-item-dot" style="background:var(--kyoto)"></div><div class="list-item-content"><div class="list-item-name">Kokedera (Moss Temple)</div><div class="list-item-desc">Unique entirely-moss garden — requires advance written reservation</div></div></div>
+        <div class="list-item"><div class="list-item-dot" style="background:var(--kyoto)"></div><div class="list-item-content"><div class="list-item-name">Daikakuji Temple</div><div class="list-item-desc">Former imperial palace turned temple, near Arashiyama</div></div></div>
+        <div class="list-item"><div class="list-item-dot" style="background:var(--kyoto)"></div><div class="list-item-content"><div class="list-item-name">Toei Eigamura</div><div class="list-item-desc">Theme park / film set used for samurai and period dramas</div></div></div>
+      </div>
+    </div>
+
+    <div class="sugg-divider">Top Restaurant Picks</div>
+    <div class="cards-grid">
+      <div class="photo-card"><div class="card-img-placeholder">🥩</div><div class="card-body"><div class="card-type">🥩 Gyukatsu</div><div class="card-name">GYUKATSU Kyoto Katsugyu</div><div class="card-rating"><span class="stars">★★★★★</span><span class="rating-num">4.8</span><span class="rating-count">(10,219)</span></div><div class="card-desc">Beef katsu served rare, cook on a hot stone at your table. Premium wagyu option. Expect a short wait — moves fast.</div><div class="card-hours">Daily 10:00 AM – 10:30 PM</div></div></div>
+      <div class="photo-card"><div class="card-img-placeholder">🍲</div><div class="card-body"><div class="card-type">🍲 Wagyu Sukiyaki</div><div class="card-name">A5 Wagyu Sukiyaki Panga</div><div class="card-rating"><span class="stars">★★★★★</span><span class="rating-num">4.9</span><span class="rating-count">(4,577)</span></div><div class="card-desc">Private tatami rooms, A5 wagyu, complimentary matcha and origami gift. One of Kyoto's best dinners. Book well in advance!</div><div class="card-hours">Daily 5:00 PM – 10:30 PM</div></div></div>
+      <div class="photo-card"><div class="card-img-placeholder">🥩</div><div class="card-body"><div class="card-type">🥩 Tonkatsu</div><div class="card-name">Kyoto Tonkatsu Katsuda</div><div class="card-rating"><span class="stars">★★★★★</span><span class="rating-num">4.9</span><span class="rating-count">(4,962)</span></div><div class="card-desc">Young chef-owner Kai's intimate counter. Wagyu/pork katsu → veggies → katsu egg curry rice finale. An experience, not just a meal.</div><div class="card-hours">Daily 11:30 AM – 10:00 PM</div></div></div>
+      <div class="photo-card"><div class="card-img-placeholder">🍔</div><div class="card-body"><div class="card-type">🍔 Hamburg Steak</div><div class="card-name">Hikiniku to Come</div><div class="card-rating"><span class="stars">★★★★★</span><span class="rating-num">4.5</span><span class="rating-count">(1,996)</span></div><div class="card-desc">Three beef patties, three ways to eat them — a focused, excellent concept near Higashiyama. Reserve 7 days ahead online.</div><div class="card-hours">Thu–Tue 11 AM–2:15 PM, 5–8:20 PM</div></div></div>
+    </div>
+
+    <div class="list-section">
+      <div class="list-section-header" style="background:var(--kyoto)" onclick="toggleList(this)">
+        <span>Tom's Full Kyoto Restaurant List (24 more spots)</span><span class="toggle">▼</span>
+      </div>
+      <div class="list-items">
+        <div class="list-item"><div class="list-item-dot" style="background:var(--kyoto)"></div><div class="list-item-content"><div class="list-item-name">Komedokoro Inamoto</div><div class="list-item-desc">Casual eatery that prides itself on the rice</div></div></div>
+        <div class="list-item"><div class="list-item-dot" style="background:var(--kyoto)"></div><div class="list-item-content"><div class="list-item-name">Shigetsu</div><div class="list-item-desc">Traditional vegetarian Buddhist meal on kneeling tables — may need a group</div></div></div>
+        <div class="list-item"><div class="list-item-dot" style="background:var(--kyoto)"></div><div class="list-item-content"><div class="list-item-name">Kushi Tanaka</div><div class="list-item-desc">Prix fixe skewer menu</div></div></div>
+        <div class="list-item"><div class="list-item-dot" style="background:var(--kyoto)"></div><div class="list-item-content"><div class="list-item-name">Choshoku Kishin</div><div class="list-item-desc">Japanese breakfast spot</div></div></div>
+        <div class="list-item"><div class="list-item-dot" style="background:var(--kyoto)"></div><div class="list-item-content"><div class="list-item-name">Kikunoi Mugesambo</div><div class="list-item-desc">Multi-course meal with garden view</div></div></div>
+        <div class="list-item"><div class="list-item-dot" style="background:var(--kyoto)"></div><div class="list-item-content"><div class="list-item-name">Kyogoku Kaneyo</div><div class="list-item-desc">Freshwater eel restaurant</div></div></div>
+        <div class="list-item"><div class="list-item-dot" style="background:var(--kyoto)"></div><div class="list-item-content"><div class="list-item-name">Kappo Takohachi</div><div class="list-item-desc">Casual dining at a counter</div></div></div>
+        <div class="list-item"><div class="list-item-dot" style="background:var(--kyoto)"></div><div class="list-item-content"><div class="list-item-name">Kanesho</div><div class="list-item-desc">Freshwater eel restaurant</div></div></div>
+        <div class="list-item"><div class="list-item-dot" style="background:var(--kyoto)"></div><div class="list-item-content"><div class="list-item-name">Ajiro Honten</div><div class="list-item-desc">Zen Buddhist-themed restaurant — may need a group</div></div></div>
+        <div class="list-item"><div class="list-item-dot" style="background:var(--kyoto)"></div><div class="list-item-content"><div class="list-item-name">Saketosakana DNA</div><div class="list-item-desc">Food and sake from Obama, Fukui prefecture</div></div></div>
+        <div class="list-item"><div class="list-item-dot" style="background:var(--kyoto)"></div><div class="list-item-content"><div class="list-item-name">Taketoko</div><div class="list-item-desc">Chawanmushi as the signature dish — unassuming and excellent</div></div></div>
+        <div class="list-item"><div class="list-item-dot" style="background:var(--kyoto)"></div><div class="list-item-content"><div class="list-item-name">Okuniya Mambei</div><div class="list-item-desc">Restaurant that only serves freshwater eel</div></div></div>
+        <div class="list-item"><div class="list-item-dot" style="background:var(--kyoto)"></div><div class="list-item-content"><div class="list-item-name">WASHOKU TOKU</div><div class="list-item-desc">À la carte with a good sashimi plate</div></div></div>
+        <div class="list-item"><div class="list-item-dot" style="background:var(--kyoto)"></div><div class="list-item-content"><div class="list-item-name">Sushizen</div><div class="list-item-desc">Reasonably priced sushi</div></div></div>
+        <div class="list-item"><div class="list-item-dot" style="background:var(--kyoto)"></div><div class="list-item-content"><div class="list-item-name">Sambongi Shoten</div><div class="list-item-desc">Char-grilled meats specialist</div></div></div>
+        <div class="list-item"><div class="list-item-dot" style="background:var(--kyoto)"></div><div class="list-item-content"><div class="list-item-name">Shichiku Kiko</div><div class="list-item-desc">Kyoto cuisine</div></div></div>
+        <div class="list-item"><div class="list-item-dot" style="background:var(--kyoto)"></div><div class="list-item-content"><div class="list-item-name">Fuyacho 103</div><div class="list-item-desc">Oden hot pot restaurant</div></div></div>
+        <div class="list-item"><div class="list-item-dot" style="background:var(--kyoto)"></div><div class="list-item-content"><div class="list-item-name">NOODLE SHOP RENNOSUKE</div><div class="list-item-desc">Kyoto-style ramen</div></div></div>
+        <div class="list-item"><div class="list-item-dot" style="background:var(--kyoto)"></div><div class="list-item-content"><div class="list-item-name">Ramen Touhichi</div><div class="list-item-desc">Quality chicken ramen focus</div></div></div>
+        <div class="list-item"><div class="list-item-dot" style="background:var(--kyoto)"></div><div class="list-item-content"><div class="list-item-name">Gion Yorozuya</div><div class="list-item-desc">Udon shop in Gion — will probably have a line</div></div></div>
+        <div class="list-item"><div class="list-item-dot" style="background:var(--kyoto)"></div><div class="list-item-content"><div class="list-item-name">Takocho</div><div class="list-item-desc">Oden hot pot with cool/unusual ingredients</div></div></div>
+        <div class="list-item"><div class="list-item-dot" style="background:var(--kyoto)"></div><div class="list-item-content"><div class="list-item-name">Jikiba Ono</div><div class="list-item-desc">Local seafood dishes</div></div></div>
+        <div class="list-item"><div class="list-item-dot" style="background:#7b6d8d;opacity:0.6"></div><div class="list-item-content"><div class="list-item-name">⭐ Hyotei</div><div class="list-item-desc">3 Michelin star ryotei — expensive, book months ahead</div></div></div>
+        <div class="list-item"><div class="list-item-dot" style="background:#7b6d8d;opacity:0.6"></div><div class="list-item-content"><div class="list-item-name">⭐ Kikunoi Honten</div><div class="list-item-desc">3 Michelin star ryotei — expensive</div></div></div>
+        <div class="list-item"><div class="list-item-dot" style="background:#7b6d8d;opacity:0.6"></div><div class="list-item-content"><div class="list-item-name">⭐ Mizai</div><div class="list-item-desc">3 Michelin stars in a park surrounded by cherry blossoms, serves matcha tea — expensive</div></div></div>
+      </div>
+    </div>
+
+    <div class="sugg-divider">Departure</div>
+    <div class="transit-card">
+      <div class="transit-icon">🚄</div>
+      <div class="transit-info"><div class="transit-route">Kyoto → Tokyo · Shinkansen</div><div class="transit-detail">Sat Mar 29 · Departure 1:00 PM · ~2h 15min · Included in $213 train budget</div></div>
+      <span class="flight-badge badge-bullet">Shinkansen</span>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════ -->
+<!-- TOKYO TAB                                  -->
+<!-- ══════════════════════════════════════════ -->
+<div id="tab-tokyo" class="tab-pane">
+  <div class="city-section tokyo">
+    <div class="section-header">
+      <h2>Tokyo</h2>
+      <span class="city-tag" style="background:var(--tokyo)">Mar 29 – Apr 4 · 6 nights</span>
+    </div>
+
+    <div class="sugg-divider">Hotel</div>
+    <div class="cards-grid full">
+      <div class="hotel-card">
+        <div class="hotel-color-bar" style="background:var(--tokyo)"></div>
+        <img class="hotel-img" src="https://lh3.googleusercontent.com/p/AF1QipNzD7O2KxQ2y2p-jSGOv2m4UDYkILxRkXiDX9Q=s1600-w800" onerror="this.style.display='none'" alt="Hotel Resol" loading="lazy">
+        <div class="hotel-body">
+          <div class="hotel-name">Hotel Resol Stay Akihabara</div>
+          <div class="hotel-dates">📍 Kanda Sudacho, Chiyoda City · Mar 29–Apr 4 · 6 nights · ★ 4.5 (304 reviews)</div>
+          <div class="hotel-review">"Gorgeous greenery lobby, robot greeter, bath salts and premium amenities, exceptional staff. Voted best hotel we stayed in Japan."</div>
+          <div class="card-meta" style="margin-top:0.75rem;">
+            <span class="meta-tag">🤖 Lobby Robot</span><span class="meta-tag">🌿 Plant Lobby</span><span class="meta-tag">🛁 Bath Salts</span><span class="meta-tag">📍 Near Akihabara Station</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sugg-divider">Top Sights & Experiences</div>
+    <div class="cards-grid">
+      <div class="photo-card">
+        <img class="card-img" src="https://lh3.googleusercontent.com/p/AF1QipMv6SnkXxh7pZbdO0jPAzrjuaLVPGzM4s9JrEQ=s1600-w600" onerror="this.parentElement.querySelector('.card-img-placeholder').style.display='flex';this.style.display='none'" alt="Akihabara" loading="lazy">
+        <div class="card-img-placeholder" style="display:none">⚡</div>
+        <div class="card-body"><div class="card-type">⚡ District · At your hotel</div><div class="card-name">Akihabara Electric Town</div><div class="card-rating"><span class="stars">★★★★★</span><span class="rating-num">4.5</span><span class="rating-count">(8,058)</span></div><div class="card-desc">Neon otaku paradise right outside. Don Quijote, Super Potato, Gamers, Mandarake, maid cafes, Radio Kaikan. Walk side streets for better prices.</div><div class="card-hours">Most shops 11 AM – 9 PM daily</div></div>
+      </div>
+      <div class="photo-card">
+        <img class="card-img" src="https://lh3.googleusercontent.com/p/AF1QipMHVsV8OfSrfH8J9NLrX1D0ZkZvS0pBiAlM1Us=s1600-w600" onerror="this.parentElement.querySelector('.card-img-placeholder').style.display='flex';this.style.display='none'" alt="Senso-ji" loading="lazy">
+        <div class="card-img-placeholder" style="display:none">🏮</div>
+        <div class="card-body"><div class="card-type">🏮 Temple · Asakusa</div><div class="card-name">Senso-ji & Asakusa</div><div class="card-rating"><span class="stars">★★★★★</span><span class="rating-num">4.5</span><span class="rating-count">(92,222)</span></div><div class="card-desc">Tokyo's oldest temple. Kaminarimon Gate, Nakamise shopping street, traditional snacks. Beautiful at night and at dawn. Combine with Asakusa market walk.</div><div class="card-hours">Open 24 hours (temple gates from 6 AM)</div></div>
+      </div>
+      <div class="photo-card">
+        <img class="card-img" src="https://lh3.googleusercontent.com/p/AF1QipMvQzP1JOqTH_7vJZ9fOLNdP2a0yW4A4bVMpUg=s1600-w600" onerror="this.parentElement.querySelector('.card-img-placeholder').style.display='flex';this.style.display='none'" alt="Shinjuku Gyoen" loading="lazy">
+        <div class="card-img-placeholder" style="display:none">🌸</div>
+        <div class="card-body"><div class="card-type">🌸 Park · Shinjuku</div><div class="card-name">Shinjuku Gyoen National Garden</div><div class="card-rating"><span class="stars">★★★★★</span><span class="rating-num">4.6</span><span class="rating-count">(43,339)</span></div><div class="card-desc">Late March = peak cherry blossom season here. Japanese, English & French gardens. Arrive early — crowds build by noon. Closed Mondays.</div><div class="card-hours">Tue–Sun 9:00 AM – 4:00 PM</div></div>
+      </div>
+      <div class="photo-card">
+        <img class="card-img" src="https://lh3.googleusercontent.com/p/AF1QipNz5A5VKN3dvd7T5M4k7lz7N1X4nLzJEUJJD5k=s1600-w600" onerror="this.parentElement.querySelector('.card-img-placeholder').style.display='flex';this.style.display='none'" alt="Shibuya Sky" loading="lazy">
+        <div class="card-img-placeholder" style="display:none">🌆</div>
+        <div class="card-body"><div class="card-type">🌆 Observation Deck · Shibuya</div><div class="card-name">Shibuya Sky</div><div class="card-rating"><span class="stars">★★★★★</span><span class="rating-num">4.6</span><span class="rating-count">(23,595)</span></div><div class="card-desc">360° rooftop observation deck above the Shibuya Scramble. Best at sunset. Buy tickets 1–2 weeks ahead. Also see the Hachiko Statue and Scramble Crossing below.</div><div class="card-hours">Daily 10:00 AM – 10:30 PM</div></div>
+      </div>
+      <div class="photo-card">
+        <img class="card-img" src="https://lh3.googleusercontent.com/p/AF1QipM9fvXVKVIQ9yLfF1EEj6g7eWXfqpY84Kd2HpM=s1600-w600" onerror="this.parentElement.querySelector('.card-img-placeholder').style.display='flex';this.style.display='none'" alt="Street Kart" loading="lazy">
+        <div class="card-img-placeholder" style="display:none">🏎</div>
+        <div class="card-body"><div class="card-type">🏎 Experience · Akihabara</div><div class="card-name">STREET KART Akihabara</div><div class="card-rating"><span class="stars">★★★★★</span><span class="rating-num">4.9</span><span class="rating-count">(3,306)</span></div><div class="card-desc">Drive go-karts through Tokyo streets in costume — guides take photos, give city commentary. "Unforgettable." Book ahead, dress up, go wild.</div><div class="card-hours">Daily 10:00 AM – 10:00 PM</div></div>
+      </div>
+      <div class="photo-card">
+        <img class="card-img" src="https://lh3.googleusercontent.com/p/AF1QipNvX4dxZFz_mQ_PFfKzL3Bj0fV6-cqJWgBW9M=s1600-w600" onerror="this.parentElement.querySelector('.card-img-placeholder').style.display='flex';this.style.display='none'" alt="Golden Gai" loading="lazy">
+        <div class="card-img-placeholder" style="display:none">🍶</div>
+        <div class="card-body"><div class="card-type">🍶 Nightlife · Shinjuku</div><div class="card-name">Golden Gai</div><div class="card-rating"><span class="stars">★★★★☆</span><span class="rating-num">4.3</span><span class="rating-count">(12,289)</span></div><div class="card-desc">Six narrow alleys of 200+ micro-bars, each with its own theme. Foreigner-friendly. Bar-hop with a different drink in each tiny spot. Opens ~5pm, goes until 5am.</div><div class="card-hours">Open 24 hours (bars open from ~5 PM)</div></div>
+      </div>
+    </div>
+
+    <div class="list-section">
+      <div class="list-section-header" style="background:var(--tokyo)" onclick="toggleList(this)">
+        <span>Tom's Full Tokyo Neighbourhood & Activities List</span><span class="toggle">▼</span>
+      </div>
+      <div class="list-items">
+        <div class="list-item"><div class="list-item-dot" style="background:#999"></div><div class="list-item-content"><div class="list-item-name" style="color:var(--muted);font-size:0.7rem;text-transform:uppercase;letter-spacing:0.1em">SHIBUYA</div></div></div>
+        <div class="list-item"><div class="list-item-dot" style="background:var(--tokyo)"></div><div class="list-item-content"><div class="list-item-name">Center Gai</div><div class="list-item-desc">Center of Shibuya — shopping and street energy</div></div></div>
+        <div class="list-item"><div class="list-item-dot" style="background:var(--tokyo)"></div><div class="list-item-content"><div class="list-item-name">Koen Dori</div><div class="list-item-desc">More shopping — boutiques and chain stores</div></div></div>
+        <div class="list-item"><div class="list-item-dot" style="background:var(--tokyo)"></div><div class="list-item-content"><div class="list-item-name">Hachiko Statue</div><div class="list-item-desc">The loyal sad dog statue — iconic photo spot outside Shibuya Station</div></div></div>
+        <div class="list-item"><div class="list-item-dot" style="background:#999"></div><div class="list-item-content"><div class="list-item-name" style="color:var(--muted);font-size:0.7rem;text-transform:uppercase;letter-spacing:0.1em">AKIHABARA (at your hotel!)</div></div></div>
+        <div class="list-item"><div class="list-item-dot" style="background:var(--tokyo)"></div><div class="list-item-content"><div class="list-item-name">Don Quijote</div><div class="list-item-desc">Kitsch wonderland — 7 floors of cheap novelties, snacks, costumes, electronics</div></div></div>
+        <div class="list-item"><div class="list-item-dot" style="background:var(--tokyo)"></div><div class="list-item-content"><div class="list-item-name">Super Potato</div><div class="list-item-desc">Retro video game heaven — classic consoles and games</div></div></div>
+        <div class="list-item"><div class="list-item-dot" style="background:var(--tokyo)"></div><div class="list-item-content"><div class="list-item-name">Gamers</div><div class="list-item-desc">Anime and nerd merchandise</div></div></div>
+        <div class="list-item"><div class="list-item-dot" style="background:var(--tokyo)"></div><div class="list-item-content"><div class="list-item-name">Mandarake</div><div class="list-item-desc">Pre-owned manga, figures, and collectibles — great prices</div></div></div>
+        <div class="list-item"><div class="list-item-dot" style="background:var(--tokyo)"></div><div class="list-item-content"><div class="list-item-name">Maid Cafe</div><div class="list-item-desc">Embarrassing but mandatory Tokyo experience 😄</div></div></div>
+        <div class="list-item"><div class="list-item-dot" style="background:var(--tokyo)"></div><div class="list-item-content"><div class="list-item-name">Akiba Cultures Zone</div><div class="list-item-desc">Multi-floor building — cheap figures, pins, plushes, consignment anime goods. ★4.2</div></div></div>
+        <div class="list-item"><div class="list-item-dot" style="background:#999"></div><div class="list-item-content"><div class="list-item-name" style="color:var(--muted);font-size:0.7rem;text-transform:uppercase;letter-spacing:0.1em">SHINJUKU</div></div></div>
+        <div class="list-item"><div class="list-item-dot" style="background:var(--tokyo)"></div><div class="list-item-content"><div class="list-item-name">Kabukicho</div><div class="list-item-desc">Red light district — interesting to walk through, watch for scams/touts</div></div></div>
+        <div class="list-item"><div class="list-item-dot" style="background:var(--tokyo)"></div><div class="list-item-content"><div class="list-item-name">Omoide Yokocho</div><div class="list-item-desc">Late-night food and bars — tiny smoky yakitori alley under the tracks</div></div></div>
+        <div class="list-item"><div class="list-item-dot" style="background:#999"></div><div class="list-item-content"><div class="list-item-name" style="color:var(--muted);font-size:0.7rem;text-transform:uppercase;letter-spacing:0.1em">OTHER NEIGHBOURHOODS</div></div></div>
+        <div class="list-item"><div class="list-item-dot" style="background:var(--tokyo)"></div><div class="list-item-content"><div class="list-item-name">Yanaka / Sendagi / Nezu</div><div class="list-item-desc">Tokyo's old-town neighbourhood — temples, galleries, traditional shotengai shopping streets</div></div></div>
+        <div class="list-item"><div class="list-item-dot" style="background:var(--tokyo)"></div><div class="list-item-content"><div class="list-item-name">Shimokitazawa</div><div class="list-item-desc">Bohemian neighbourhood — vintage thrift shops, live music, indie cafes</div></div></div>
+        <div class="list-item"><div class="list-item-dot" style="background:var(--tokyo)"></div><div class="list-item-content"><div class="list-item-name">Harajuku</div><div class="list-item-desc">Thrifting and unique cafes — Takeshita Street for wild fashion, Omotesando for upscale</div></div></div>
+        <div class="list-item"><div class="list-item-dot" style="background:var(--tokyo)"></div><div class="list-item-content"><div class="list-item-name">Koenji</div><div class="list-item-desc">Alternative, artsy neighbourhood — vintage stores, live music, local vibe</div></div></div>
+      </div>
+    </div>
+
+    <div class="sugg-divider">Top Restaurant Picks</div>
+    <div class="cards-grid">
+      <div class="photo-card"><div class="card-img-placeholder">🥟</div><div class="card-body"><div class="card-type">🥟 Gyoza · Roppongi</div><div class="card-name">GYOPAO Gyoza</div><div class="card-rating"><span class="stars">★★★★★</span><span class="rating-num">4.8</span><span class="rating-count">(17,722)</span></div><div class="card-desc">Incredible gyoza, shrimp shumai, chicken bone broth. Cozy, lively, walk-in friendly in the afternoon. Worth the metro trip to Roppongi.</div><div class="card-hours">Daily 11 AM – 7 AM (yes, stays open late!)</div></div></div>
+      <div class="photo-card"><div class="card-img-placeholder">🥩</div><div class="card-body"><div class="card-type">🥩 Shabu-Shabu · Shibuya</div><div class="card-name">MO-MO-PARADISE</div><div class="card-rating"><span class="stars">★★★★★</span><span class="rating-num">4.9</span><span class="rating-count">(8,201)</span></div><div class="card-desc">All-you-can-eat shabu-shabu + unlimited matcha ice cream. Premium wagyu option. Arrive right at 5 PM or book ahead. Exceptional service.</div><div class="card-hours">Daily 11:30 AM–3 PM, 5–10:30 PM</div></div></div>
+      <div class="photo-card"><div class="card-img-placeholder">🌿</div><div class="card-body"><div class="card-type">🌿 Organic · Omotesando</div><div class="card-name">Brown Rice Tokyo</div><div class="card-rating"><span class="stars">★★★★★</span><span class="rating-num">4.5</span><span class="rating-count">(768)</span></div><div class="card-desc">Serene organic Japanese in a leafy Omotesando courtyard. Seasonal sets, matcha drinks. A peaceful break from busy Tokyo days.</div><div class="card-hours">Daily 11:30 AM – 6:00 PM</div></div></div>
+      <div class="photo-card"><div class="card-img-placeholder">⭐</div><div class="card-body"><div class="card-type">⭐ Fine Dining · Minami-Aoyama</div><div class="card-name">Narisawa</div><div class="card-rating"><span class="stars">★★★★★</span><span class="rating-num">4.6</span><span class="rating-count">(699)</span></div><div class="card-desc">Two Michelin stars. Innovative Satoyama Cuisine — bread literally rises at your table. The bread alone is worth it. Reserve months in advance.</div><div class="card-hours">Tue–Sat 12–2:30 PM, 5:30–8 PM</div></div></div>
+    </div>
+
+    <div class="list-section">
+      <div class="list-section-header" style="background:var(--tokyo)" onclick="toggleList(this)">
+        <span>Tom's Neighbourhood Restaurant Lists</span><span class="toggle">▼</span>
+      </div>
+      <div class="list-items">
+        <div class="list-item"><div class="list-item-dot" style="background:#999"></div><div class="list-item-content"><div class="list-item-name" style="color:var(--muted);font-size:0.7rem;text-transform:uppercase;letter-spacing:0.1em">SHIBUYA</div></div></div>
+        <div class="list-item"><div class="list-item-dot" style="background:var(--tokyo)"></div><div class="list-item-content"><div class="list-item-name">Night Market</div><div class="list-item-desc">South-East Asian food</div></div></div>
+        <div class="list-item"><div class="list-item-dot" style="background:var(--tokyo)"></div><div class="list-item-content"><div class="list-item-name">Kuhara</div><div class="list-item-desc">Japanese food; duck specialty</div></div></div>
+        <div class="list-item"><div class="list-item-dot" style="background:var(--tokyo)"></div><div class="list-item-content"><div class="list-item-name">Katsuo Shokudo</div><div class="list-item-desc">Miso soup and bonito</div></div></div>
+        <div class="list-item"><div class="list-item-dot" style="background:var(--tokyo)"></div><div class="list-item-content"><div class="list-item-name">Osobano Kouga / Soba Tajima</div><div class="list-item-desc">Two solid soba options in Shibuya</div></div></div>
+        <div class="list-item"><div class="list-item-dot" style="background:var(--tokyo)"></div><div class="list-item-content"><div class="list-item-name">Teuchi Asama</div><div class="list-item-desc">Ramen</div></div></div>
+        <div class="list-item"><div class="list-item-dot" style="background:var(--tokyo)"></div><div class="list-item-content"><div class="list-item-name">Tonkatsu Nanaido</div><div class="list-item-desc">Tonkatsu</div></div></div>
+        <div class="list-item"><div class="list-item-dot" style="background:var(--tokyo)"></div><div class="list-item-content"><div class="list-item-name">Yoshoku Edoya</div><div class="list-item-desc">Yoshoku (Western/Japanese fusion)</div></div></div>
+        <div class="list-item"><div class="list-item-dot" style="background:var(--tokyo)"></div><div class="list-item-content"><div class="list-item-name">YAKUMO</div><div class="list-item-desc">Ramen — white dashi specialty</div></div></div>
+        <div class="list-item"><div class="list-item-dot" style="background:var(--tokyo)"></div><div class="list-item-content"><div class="list-item-name">IRUCA TOKYO</div><div class="list-item-desc">Ramen</div></div></div>
+        <div class="list-item"><div class="list-item-dot" style="background:var(--tokyo)"></div><div class="list-item-content"><div class="list-item-name">Tachigui Sushi Tonari</div><div class="list-item-desc">Casual standing sushi</div></div></div>
+        <div class="list-item"><div class="list-item-dot" style="background:var(--tokyo)"></div><div class="list-item-content"><div class="list-item-name">Yakitori Abe</div><div class="list-item-desc">Grilled skewer dishes</div></div></div>
+        <div class="list-item"><div class="list-item-dot" style="background:var(--tokyo)"></div><div class="list-item-content"><div class="list-item-name">Ramen Break Beats</div><div class="list-item-desc">Ramen shop owned by a former DJ</div></div></div>
+        <div class="list-item"><div class="list-item-dot" style="background:#999"></div><div class="list-item-content"><div class="list-item-name" style="color:var(--muted);font-size:0.7rem;text-transform:uppercase;letter-spacing:0.1em">AKIHABARA</div></div></div>
+        <div class="list-item"><div class="list-item-dot" style="background:var(--tokyo)"></div><div class="list-item-content"><div class="list-item-name">Tonpachitei</div><div class="list-item-desc">Tonkatsu</div></div></div>
+        <div class="list-item"><div class="list-item-dot" style="background:var(--tokyo)"></div><div class="list-item-content"><div class="list-item-name">Ponta Honke</div><div class="list-item-desc">Yoshoku (Western/Japanese fusion) — historic spot</div></div></div>
+      </div>
+    </div>
+
+    <div class="sugg-divider">Departure · Fri Apr 4</div>
+    <div class="cards-grid full">
+      <div class="flight-card">
+        <div class="flight-card-inner">
+          <div class="flight-leg">
+            <div class="airport-block"><div class="airport-code">NRT</div><div class="airport-city">Tokyo Narita</div></div>
+            <div class="flight-arrow">
+              <div class="flight-times"><span>12:30 PM</span><span>3:10 PM</span></div>
+              <div class="flight-line"></div>
+              <div class="flight-meta">Air Premia · Fri Apr 4</div>
+            </div>
+            <div class="airport-block"><div class="airport-code">ICN</div><div class="airport-city">Seoul Incheon</div></div>
+          </div>
+          <span class="flight-badge badge-air-premia">Air Premia</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════ -->
+<!-- SEOUL TAB                                  -->
+<!-- ══════════════════════════════════════════ -->
+<div id="tab-seoul" class="tab-pane">
+  <div class="city-section seoul">
+    <div class="section-header">
+      <h2>Seoul</h2>
+      <span class="city-tag" style="background:var(--seoul)">Apr 4–6 · 2 nights</span>
+    </div>
+
+    <div class="sugg-divider">Hotel</div>
+    <div class="cards-grid full">
+      <div class="hotel-card">
+        <div class="hotel-color-bar" style="background:var(--seoul)"></div>
+        <img class="hotel-img" src="https://lh3.googleusercontent.com/p/AF1QipMf7tH0LU7WT4L3q8z7fTLW_lUFhfU-f3Z7gJk=s1600-w800" onerror="this.style.display='none'" alt="AMID Hotel" loading="lazy">
+        <div class="hotel-body">
+          <div class="hotel-name">AMID Hotel Seoul</div>
+          <div class="hotel-dates">📍 Insadong, Jongno District · Apr 4–6 · 2 nights · ★ 4.2 (1,464 reviews) · Open 24h</div>
+          <div class="hotel-review">"Excellent location within walking distance of all major attractions. Service is clearly a top priority. Breakfast buffet is delicious."</div>
+          <div class="card-meta" style="margin-top:0.75rem;">
+            <span class="meta-tag">📍 Near Gyeongbokgung</span><span class="meta-tag">🍳 Breakfast Buffet</span><span class="meta-tag">🏛 Walk to Insadong</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sugg-divider">Top Sights</div>
+    <div class="cards-grid">
+      <div class="photo-card">
+        <img class="card-img" src="https://lh3.googleusercontent.com/p/AF1QipMHyQDuRcMfCh2UbRMSJFkUbKuJLF3NHy49lI=s1600-w600" onerror="this.parentElement.querySelector('.card-img-placeholder').style.display='flex';this.style.display='none'" alt="Gyeongbokgung" loading="lazy">
+        <div class="card-img-placeholder" style="display:none">🏯</div>
+        <div class="card-body"><div class="card-type">🏯 Palace · Walking Distance</div><div class="card-name">Gyeongbokgung Palace</div><div class="card-rating"><span class="stars">★★★★★</span><span class="rating-num">4.6</span><span class="rating-count">(45,953)</span></div><div class="card-desc">Joseon Dynasty palace — changing of guard ceremony is unmissable (check times). Wear a hanbok for free entry! Allow half a day. Right from your hotel.</div><div class="card-hours">Wed–Mon 9:00 AM – 5:00 PM (closed Tue)</div></div>
+      </div>
+      <div class="photo-card">
+        <img class="card-img" src="https://lh3.googleusercontent.com/p/AF1QipMBhU_Ov4q1JNLm9sSOF8XbOI8JwB1FIV2_hA=s1600-w600" onerror="this.parentElement.querySelector('.card-img-placeholder').style.display='flex';this.style.display='none'" alt="Bukchon Hanok" loading="lazy">
+        <div class="card-img-placeholder" style="display:none">🏘</div>
+        <div class="card-body"><div class="card-type">🏘 Village · Walking Distance</div><div class="card-name">Bukchon Hanok Village</div><div class="card-rating"><span class="stars">★★★★☆</span><span class="rating-num">4.4</span><span class="rating-count">(23,755)</span></div><div class="card-desc">Traditional Korean hanok houses on a hillside — hidden cafes, rooftop views. Combine with Gyeongbokgung in one morning. Go early, it's residential.</div><div class="card-hours">Daily 10:00 AM – 5:00 PM</div></div>
+      </div>
+      <div class="photo-card">
+        <img class="card-img" src="https://lh3.googleusercontent.com/p/AF1QipMGxJpHW6GZDeLbPxnf0fV8jCuFJA8TFv0gXkY=s1600-w600" onerror="this.parentElement.querySelector('.card-img-placeholder').style.display='flex';this.style.display='none'" alt="N Seoul Tower" loading="lazy">
+        <div class="card-img-placeholder" style="display:none">🗼</div>
+        <div class="card-body"><div class="card-type">🗼 Tower</div><div class="card-name">N Seoul Tower</div><div class="card-rating"><span class="stars">★★★★★</span><span class="rating-num">4.5</span><span class="rating-count">(66,108)</span></div><div class="card-desc">Iconic tower on Namsan Mountain. Take the cable car up or hike 1,000 steps. Best at sunset. Love locks everywhere. Great city panorama.</div><div class="card-hours">Daily 10:30 AM – 10:30 PM</div></div>
+      </div>
+      <div class="photo-card">
+        <img class="card-img" src="https://lh3.googleusercontent.com/p/AF1QipN0naqKUqCjH1f5h8F9WZC3RZ5q8TrfVgpwGjA=s1600-w600" onerror="this.parentElement.querySelector('.card-img-placeholder').style.display='flex';this.style.display='none'" alt="Lotte World" loading="lazy">
+        <div class="card-img-placeholder" style="display:none">🎡</div>
+        <div class="card-body"><div class="card-type">🎡 Theme Park</div><div class="card-name">Lotte World</div><div class="card-rating"><span class="stars">★★★★☆</span><span class="rating-num">4.3</span><span class="rating-count">(48,194)</span></div><div class="card-desc">Massive indoor + outdoor amusement park. Get the Magic Pass on weekends — essential to skip lines. Good mix of Korean theme park charm and major rides.</div><div class="card-hours">Daily 10:00 AM – 9/10 PM</div></div>
+      </div>
+    </div>
+
+    <div class="sugg-divider">Top Restaurant Picks</div>
+    <div class="cards-grid">
+      <div class="photo-card"><div class="card-img-placeholder">🥩</div><div class="card-body"><div class="card-type">🥩 Korean BBQ · Gangnam</div><div class="card-name">Dosan Butcher</div><div class="card-rating"><span class="stars">★★★★★</span><span class="rating-num">4.9</span><span class="rating-count">(1,958)</span></div><div class="card-desc">Best Korean BBQ in Gangnam — high-quality Hanwoo, great ventilation, impeccable service. The raw marbled Hanwoo is a must-order.</div><div class="card-hours">Daily 11:30 AM–3 PM, 5 PM–midnight</div></div></div>
+      <div class="photo-card"><div class="card-img-placeholder">🍖</div><div class="card-body"><div class="card-type">🍖 Bulgogi · Jung District</div><div class="card-name">Haepo</div><div class="card-rating"><span class="stars">★★★★★</span><span class="rating-num">4.9</span><span class="rating-count">(664)</span></div><div class="card-desc">Soy-marinated bulgogi + perilla oil noodles. One of Seoul's most memorable affordable meals. Staff teach you how to eat like a local. A hidden gem.</div><div class="card-hours">Mon–Sat 11:30 AM – 11 PM</div></div></div>
+      <div class="photo-card"><div class="card-img-placeholder">🍽</div><div class="card-body"><div class="card-type">🍽 Fine Dining · Gangnam</div><div class="card-name">Jungsik Seoul</div><div class="card-rating"><span class="stars">★★★★☆</span><span class="rating-num">4.4</span><span class="rating-count">(1,600)</span></div><div class="card-desc">Modern Korean tasting menu — creative, beautiful. The signature Kimbap is exceptional. Slightly more affordable than the NYC location. Reserve ahead.</div><div class="card-hours">Mon–Fri 12–3 PM, 5:30–10 PM</div></div></div>
+      <div class="photo-card"><div class="card-img-placeholder">🌍</div><div class="card-body"><div class="card-type">🌍 Iraqi / Halal · Jongno</div><div class="card-name">Babylon Restaurant Seoul</div><div class="card-rating"><span class="stars">★★★★★</span><span class="rating-num">4.8</span><span class="rating-count">(112)</span></div><div class="card-desc">Authentic Iraqi food — mixed grills, dolma, hummus, complimentary lentil soup. Near Gyeongbokgung. A surprising hidden gem for something different in Seoul.</div><div class="card-hours">Daily 11:00 AM – 9:00 PM</div></div></div>
+    </div>
+
+    <div class="sugg-divider">Departure · Sun Apr 6 → Mon Apr 7</div>
+    <div class="cards-grid full" style="display:flex;flex-direction:column;gap:0.75rem;">
+      <div class="flight-card"><div class="flight-card-inner"><div class="flight-leg"><div class="airport-block"><div class="airport-code">ICN</div><div class="airport-city">Seoul</div></div><div class="flight-arrow"><div class="flight-times"><span>8:45 PM</span><span>4:10 PM</span></div><div class="flight-line"></div><div class="flight-meta">WestJet · Apr 6 (crosses dateline)</div></div><div class="airport-block"><div class="airport-code">YYC</div><div class="airport-city">Calgary</div></div></div><span class="flight-badge badge-westjet">WestJet</span></div></div>
+      <div class="flight-card"><div class="flight-card-inner"><div class="flight-leg"><div class="airport-block"><div class="airport-code">YYC</div><div class="airport-city">Calgary</div></div><div class="flight-arrow"><div class="flight-times"><span>12:30 AM</span><span>6:53 AM</span></div><div class="flight-line"></div><div class="flight-meta">Apr 7 · early morning</div></div><div class="airport-block"><div class="airport-code">ATL</div><div class="airport-city">Atlanta</div></div></div></div></div>
+      <div class="flight-card"><div class="flight-card-inner"><div class="flight-leg"><div class="airport-block"><div class="airport-code">ATL</div><div class="airport-city">Atlanta</div></div><div class="flight-arrow"><div class="flight-times"><span>9:04 AM</span><span>10:47 AM</span></div><div class="flight-line"></div><div class="flight-meta">Apr 7 · Home! 🎉</div></div><div class="airport-block"><div class="airport-code">BWI</div><div class="airport-city">Baltimore</div></div></div></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════ -->
+<!-- FLIGHTS TAB                                -->
+<!-- ══════════════════════════════════════════ -->
+<div id="tab-flights" class="tab-pane">
+  <div class="section-header"><h2>All Flights & Transport</h2></div>
+  <div class="sugg-divider">Sun Mar 22 · Night Before</div>
+  <div class="hotel-card" style="margin-bottom:1rem;"><div class="hotel-color-bar" style="background:var(--transit)"></div><div class="hotel-body"><div class="hotel-name">Country Inn & Suites — Washington Dulles</div><div class="hotel-dates">1 night · Airport shuttle · Breakfast from 6 AM · ★ 3.7</div></div></div>
+
+  <div class="sugg-divider">Mon Mar 23 · Outbound (3 legs)</div>
+  <div style="display:flex;flex-direction:column;gap:0.75rem;">
+    <div class="flight-card"><div class="flight-card-inner"><div class="flight-leg"><div class="airport-block"><div class="airport-code">IAD</div><div class="airport-city">Dulles</div></div><div class="flight-arrow"><div class="flight-times"><span>6:00 AM</span><span>7:41 AM</span></div><div class="flight-line"></div><div class="flight-meta">Air Canada · Mar 23</div></div><div class="airport-block"><div class="airport-code">YUL</div><div class="airport-city">Montréal</div></div></div><span class="flight-badge badge-air-canada">Air Canada</span></div></div>
+    <div class="flight-card"><div class="flight-card-inner"><div class="flight-leg"><div class="airport-block"><div class="airport-code">YUL</div><div class="airport-city">Montréal</div></div><div class="flight-arrow"><div class="flight-times"><span>9:00 AM</span><span>11:44 AM</span></div><div class="flight-line"></div><div class="flight-meta">Air Canada · Mar 23 · Vancouver time</div></div><div class="airport-block"><div class="airport-code">YVR</div><div class="airport-city">Vancouver</div></div></div><span class="flight-badge badge-air-canada">Air Canada</span></div></div>
+    <div class="flight-card"><div class="flight-card-inner"><div class="flight-leg"><div class="airport-block"><div class="airport-code">YVR</div><div class="airport-city">Vancouver</div></div><div class="flight-arrow"><div class="flight-times"><span>2:30 PM</span><span>5:40 PM +1</span></div><div class="flight-line"></div><div class="flight-meta">Air Canada · lands Mar 24 in Osaka</div></div><div class="airport-block"><div class="airport-code">KIX</div><div class="airport-city">Osaka</div></div></div><span class="flight-badge badge-air-canada">Air Canada</span></div></div>
+  </div>
+
+  <div class="sugg-divider">Thu Mar 27 · Osaka → Kyoto</div>
+  <div class="transit-card"><div class="transit-icon">🚄</div><div class="transit-info"><div class="transit-route">Osaka → Kyoto · Shinkansen</div><div class="transit-detail">Departs 11:00 AM · ~15 min · Included in train budget</div></div><span class="flight-badge badge-bullet">Shinkansen</span></div>
+
+  <div class="sugg-divider">Sat Mar 29 · Kyoto → Tokyo</div>
+  <div class="transit-card"><div class="transit-icon">🚄</div><div class="transit-info"><div class="transit-route">Kyoto → Tokyo · Shinkansen (Hikari/Nozomi)</div><div class="transit-detail">Departs 1:00 PM · ~2h 15min · Included in train budget</div></div><span class="flight-badge badge-bullet">Shinkansen</span></div>
+
+  <div class="sugg-divider">Fri Apr 4 · Tokyo → Seoul</div>
+  <div class="flight-card"><div class="flight-card-inner"><div class="flight-leg"><div class="airport-block"><div class="airport-code">NRT</div><div class="airport-city">Tokyo Narita</div></div><div class="flight-arrow"><div class="flight-times"><span>12:30 PM</span><span>3:10 PM</span></div><div class="flight-line"></div><div class="flight-meta">Air Premia · Fri Apr 4</div></div><div class="airport-block"><div class="airport-code">ICN</div><div class="airport-city">Seoul Incheon</div></div></div><span class="flight-badge badge-air-premia">Air Premia</span></div></div>
+
+  <div class="sugg-divider">Sun Apr 6 – Mon Apr 7 · Return (3 legs)</div>
+  <div style="display:flex;flex-direction:column;gap:0.75rem;">
+    <div class="flight-card"><div class="flight-card-inner"><div class="flight-leg"><div class="airport-block"><div class="airport-code">ICN</div><div class="airport-city">Seoul</div></div><div class="flight-arrow"><div class="flight-times"><span>8:45 PM</span><span>4:10 PM</span></div><div class="flight-line"></div><div class="flight-meta">WestJet · Apr 6 (arrives same day — time zone gain)</div></div><div class="airport-block"><div class="airport-code">YYC</div><div class="airport-city">Calgary</div></div></div><span class="flight-badge badge-westjet">WestJet</span></div></div>
+    <div class="flight-card"><div class="flight-card-inner"><div class="flight-leg"><div class="airport-block"><div class="airport-code">YYC</div><div class="airport-city">Calgary</div></div><div class="flight-arrow"><div class="flight-times"><span>12:30 AM</span><span>6:53 AM</span></div><div class="flight-line"></div><div class="flight-meta">Apr 7 · early morning</div></div><div class="airport-block"><div class="airport-code">ATL</div><div class="airport-city">Atlanta</div></div></div></div></div>
+    <div class="flight-card"><div class="flight-card-inner"><div class="flight-leg"><div class="airport-block"><div class="airport-code">ATL</div><div class="airport-city">Atlanta</div></div><div class="flight-arrow"><div class="flight-times"><span>9:04 AM</span><span>10:47 AM</span></div><div class="flight-line"></div><div class="flight-meta">Apr 7 · Welcome home! 🎉</div></div><div class="airport-block"><div class="airport-code">BWI</div><div class="airport-city">Baltimore</div></div></div></div></div>
+  </div>
+</div>
+
+</main>
+
+<script>
+function showTab(id) {
+  document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + id).classList.add('active');
+  event.currentTarget.classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+function toggleList(header) {
+  header.classList.toggle('open');
+  const list = header.nextElementSibling;
+  list.classList.toggle('open');
+}
+</script>
+</body>
+</html>
